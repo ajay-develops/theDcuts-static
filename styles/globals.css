@@ -4,35 +4,7 @@
 
 @import "swiper/css";
 
-/* red-white */
-/* :root {
-  --primary-color: #ea4343;
-  --white-color: #fff;
-  --black-color: #000;
-  --dark-grey-color: #15111e;
-  --medium-grey-color: #333232;
-  --grey-color: #3c3c3c;
-  --light-grey-color: #666;
-  --very-light-grey-color: #999;
-  --lighter-grey-color: #aaa6b2;
-  --text-grey-color: #7d7789;
-  --background-grey-color: #f4f5fe;
-  --input-grey-color: #4d4c4c;
-  --text-light-grey-color: #b6b2bf;
-  --input-placeholder-dark-color: #9e9ba3;
-  --border-color: #eee;
-  --border-focus-color: #ccc;
-  --button-background-color: #777;
-  --button-hover-background-color: #444;
-  --skill-background-color: #ba3c3c;
-  --transparent: transparent;
-  --overlay-color: rgba(234, 67, 67, 0.72);
-  --white-opacity-30: rgba(255, 255, 255, 0.3);
-  --black-opacity-10: rgba(0, 0, 0, 0.1);
-} */
-
 /* green-white */
-
 :root {
   --primary-color: #00ff7f; /* Spring Green */
   --white-color: #fff;
@@ -59,7 +31,34 @@
   --black-opacity-10: rgba(13, 13, 13, 0.1);
 }
 
-/* plugins.css */
+/* red-white */
+:root {
+  --primary-color: #ea4343;
+  --white-color: #fff;
+  --black-color: #000;
+  --dark-grey-color: #15111e;
+  --medium-grey-color: #333232;
+  --grey-color: #3c3c3c;
+  --light-grey-color: #666;
+  --very-light-grey-color: #999;
+  --lighter-grey-color: #aaa6b2;
+  --text-grey-color: #7d7789;
+  --background-grey-color: #f4f5fe;
+  --input-grey-color: #4d4c4c;
+  --text-light-grey-color: #b6b2bf;
+  --input-placeholder-dark-color: #9e9ba3;
+  --border-color: #eee;
+  --border-focus-color: #ccc;
+  --button-background-color: #777;
+  --button-hover-background-color: #444;
+  --skill-background-color: #ba3c3c;
+  --transparent: transparent;
+  --overlay-color: rgba(234, 67, 67, 0.72);
+  --white-opacity-30: rgba(255, 255, 255, 0.3);
+  --black-opacity-10: rgba(0, 0, 0, 0.1);
+}
+
+plugins.css
 /*
 This file is made by Marketify (2021)
 
