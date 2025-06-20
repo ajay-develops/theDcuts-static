@@ -4,7 +4,8 @@
 
 @import "swiper/css";
 
-:root {
+/* red-white */
+/* :root {
   --primary-color: #ea4343;
   --white-color: #fff;
   --black-color: #000;
@@ -28,6 +29,34 @@
   --overlay-color: rgba(234, 67, 67, 0.72);
   --white-opacity-30: rgba(255, 255, 255, 0.3);
   --black-opacity-10: rgba(0, 0, 0, 0.1);
+} */
+
+/* green-white */
+
+:root {
+  --primary-color: #00ff7f; /* Spring Green */
+  --white-color: #fff;
+  --black-color: #0d0d0d; /* Very dark, near black */
+  --dark-grey-color: #1a1a1a;
+  --medium-grey-color: #2b2b2b;
+  --grey-color: #3c3c3c;
+  --light-grey-color: #666;
+  --very-light-grey-color: #999;
+  --lighter-grey-color: #b0b0b0;
+  --text-grey-color: #8a8a8a;
+  --background-grey-color: #f0f2f0;
+  --input-grey-color: #4a4a4a;
+  --text-light-grey-color: #c0c0c0;
+  --input-placeholder-dark-color: #9e9e9e;
+  --border-color: #e0e0e0;
+  --border-focus-color: #c0c0c0;
+  --button-background-color: #555;
+  --button-hover-background-color: #333;
+  --skill-background-color: #00b359; /* A darker shade of the primary green */
+  --transparent: transparent;
+  --overlay-color: rgba(0, 255, 127, 0.72); /* Overlay with primary green */
+  --white-opacity-30: rgba(255, 255, 255, 0.3);
+  --black-opacity-10: rgba(13, 13, 13, 0.1);
 }
 
 /* plugins.css */
