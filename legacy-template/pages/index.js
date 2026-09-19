@@ -1,5 +1,4 @@
 import dynamic from "next/dynamic";
-import { useEffect } from "react";
 import About from "../src/components/About";
 import Blog from "../src/components/Blog";
 import Contact from "../src/components/Contact";
@@ -16,16 +15,13 @@ const Portfolio = dynamic(() => import("../src/components/Portfolio"), {
 });
 
 const Index = () => {
-  useEffect(() => {
-    document.querySelector("body").classList.add("dark");
-  }, []);
   return (
-    <Layout dark>
+    <Layout>
       <Home />
       <About />
       <Skills />
       <Portfolio />
-      <Service dark />
+      <Service />
       <Resume />
       <Testimonial />
       <Blog />
@@ -36,3 +32,4 @@ const Index = () => {
 };
 
 export default Index;
+
