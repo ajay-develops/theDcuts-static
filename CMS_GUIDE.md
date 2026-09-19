@@ -2,6 +2,9 @@
 
 The content editor is deployed at
 [devender-saroha-portfolio.sanity.studio](https://devender-saroha-portfolio.sanity.studio/).
+The public website's `/studio` address redirects to this editor, and the Studio
+navbar includes a **View website** button that opens the live portfolio in a new
+tab.
 
 ## Editing the live site
 

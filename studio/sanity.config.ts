@@ -3,6 +3,7 @@ import {structureTool} from 'sanity/structure'
 import {visionTool} from '@sanity/vision'
 import {schemaTypes} from './schemaTypes'
 import {structure} from './structure'
+import {StudioNavbar} from './components/StudioNavbar'
 
 export default defineConfig({
   name: 'default',
@@ -15,5 +16,11 @@ export default defineConfig({
 
   schema: {
     types: schemaTypes,
+  },
+
+  studio: {
+    components: {
+      navbar: StudioNavbar,
+    },
   },
 })
