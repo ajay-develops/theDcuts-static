@@ -21,6 +21,11 @@ and what should be restored when verified portfolio content becomes available.
 
 - The live hero uses one coordinated load sequence plus purposeful image,
   button, and project hover transitions.
+- For the 2026-09-19 performance pass, the `hero-rise` and `portrait-in`
+  animations kept their movement, duration, delay, and easing, while their
+  initial opacity fade was removed so key content can paint immediately. If a
+  richer fade is restored, keep the content visible on the first frame or begin
+  the opacity effect after the initial paint.
 - The original custom cursor, preloader, parallax portrait, moving squares,
   and repeated WOW scroll reveals are inactive. They were not deleted. Restore
   them selectively after testing motion, mobile performance, and reduced-motion

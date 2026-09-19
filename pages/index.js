@@ -81,13 +81,22 @@ function sanityImage(source, width, height) {
   return urlFor(source).width(width).height(height).fit("crop").auto("format").url();
 }
 
+function sanityImageSrcSet(source, widths, aspectRatio) {
+  if (!source?.asset) return null;
+  return widths
+    .map((width) => `${sanityImage(source, width, Math.round(width / aspectRatio))} ${width}w`)
+    .join(", ");
+}
+
 function mapProject(project) {
   const video = getVideoEmbed(project?.videoUrl, project?.vimeoId || project?.id);
+  const thumbnail = project?.thumbnail;
   return {
     ...project,
     ...video,
-    image: sanityImage(project?.thumbnail, 1400, 875) || project?.image || `/img/dev/${video.id}.webp`,
-    imageAlt: project?.thumbnail?.alt || `Still from ${project?.title || "project"}`,
+    image: sanityImage(thumbnail, 1000, 625) || project?.image || `/img/dev/${video.id}.webp`,
+    imageSrcSet: sanityImageSrcSet(thumbnail, [320, 480, 640, 1000, 1400], 1.6),
+    imageAlt: thumbnail?.alt || `Still from ${project?.title || "project"}`,
   };
 }
 
@@ -99,7 +108,8 @@ export default function Home({cmsData}) {
     aboutParagraphs: cmsSite.aboutParagraphs?.length ? cmsSite.aboutParagraphs : DEFAULT_SITE.aboutParagraphs,
     facts: cmsSite.facts?.length ? cmsSite.facts : DEFAULT_SITE.facts,
     socialLinks: cmsSite.socialLinks?.length ? cmsSite.socialLinks : DEFAULT_SITE.socialLinks,
-    portraitUrl: sanityImage(cmsSite.portrait, 1100, 1450) || DEFAULT_SITE.portraitUrl,
+    portraitUrl: sanityImage(cmsSite.portrait, 800, 1053) || DEFAULT_SITE.portraitUrl,
+    portraitSrcSet: sanityImageSrcSet(cmsSite.portrait, [360, 560, 800, 1100], 0.76),
     shareImageUrl: sanityImage(cmsSite.shareImage, 1200, 630) || "https://the-dcuts-static.vercel.app/img/dev/portrait-hd.webp",
   };
   const projects = cmsData?.projects?.length ? cmsData.projects.map(mapProject) : DEFAULT_PROJECTS;
@@ -134,6 +144,16 @@ export default function Home({cmsData}) {
     <>
       <Head>
         <title>{site.seoTitle}</title>
+        {site.portraitSrcSet && (
+          <link
+            rel="preload"
+            as="image"
+            href={site.portraitUrl}
+            imageSrcSet={site.portraitSrcSet}
+            imageSizes="(max-width: 760px) 68vw, (max-width: 1000px) 34vw, 31vw"
+            fetchPriority="high"
+          />
+        )}
         <meta name="description" content={site.seoDescription} />
         <meta name="theme-color" content="#080808" />
         <meta property="og:title" content={site.seoTitle} />
@@ -166,7 +186,18 @@ export default function Home({cmsData}) {
           </div>
 
           <div className="hero-portrait">
-            <div className="portrait-frame"><img src={site.portraitUrl} alt={cmsSite.portrait?.alt || site.name} /></div>
+            <div className="portrait-frame">
+              <img
+                src={site.portraitUrl}
+                srcSet={site.portraitSrcSet || undefined}
+                sizes="(max-width: 760px) 68vw, (max-width: 1000px) 34vw, 31vw"
+                width="800"
+                height="1053"
+                fetchPriority="high"
+                decoding="async"
+                alt={cmsSite.portrait?.alt || site.name}
+              />
+            </div>
             <div className="vertical-word" aria-hidden="true">DEV</div>
             <div className="availability"><span /> {site.availability}</div>
           </div>
@@ -180,7 +211,16 @@ export default function Home({cmsData}) {
 
         {featuredProject && <section className="featured" id="featured" aria-label="Featured film">
           <button className="featured-image" onClick={() => setActiveProject(featuredProject)} aria-label={`Play ${featuredProject.title}`}>
-            <img src={featuredProject.image} alt={featuredProject.imageAlt || `Still from ${featuredProject.title}`} />
+            <img
+              src={featuredProject.image}
+              srcSet={featuredProject.imageSrcSet || undefined}
+              sizes="(max-width: 760px) 100vw, 68vw"
+              width="1000"
+              height="625"
+              loading="lazy"
+              decoding="async"
+              alt={featuredProject.imageAlt || `Still from ${featuredProject.title}`}
+            />
             <span className="featured-play"><PlayIcon /></span>
           </button>
           <div className="featured-copy">
@@ -208,7 +248,16 @@ export default function Home({cmsData}) {
             {visibleProjects.map((project) => (
               <article className="project-card" key={project._id || project.id}>
                 <button className="project-image" onClick={() => setActiveProject(project)} aria-label={`Play ${project.title}`}>
-                  <img src={project.image} alt={project.imageAlt || `Still from ${project.title}`} />
+                  <img
+                    src={project.image}
+                    srcSet={project.imageSrcSet || undefined}
+                    sizes="(max-width: 760px) calc(100vw - 40px), 46vw"
+                    width="1000"
+                    height="625"
+                    loading="lazy"
+                    decoding="async"
+                    alt={project.imageAlt || `Still from ${project.title}`}
+                  />
                   <span className="project-play"><PlayIcon /></span>
                 </button>
                 <div className="project-info">

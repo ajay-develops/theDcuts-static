@@ -9,7 +9,9 @@ class MyDocument extends Document {
   render() {
     return (
       <Html lang="en">
-        <Head />
+        <Head>
+          <link rel="icon" href="/img/dev/portrait.webp" type="image/webp" />
+        </Head>
         <body>
           <Main />
           <NextScript />
