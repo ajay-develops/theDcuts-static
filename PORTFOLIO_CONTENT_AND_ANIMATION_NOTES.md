@@ -57,10 +57,11 @@ and what should be restored when verified portfolio content becomes available.
 
 ## Current verified source data
 
-The live site uses Devender's public Vimeo profile for his name, location,
-biography, email address, portrait, ten film titles, durations, thumbnails, and
-video IDs. Category labels and descriptive portfolio copy are editorial
-groupings for the website and can be revised when Dev supplies project briefs.
+The initial live content uses Devender's public Vimeo profile for his name,
+location, biography, email address, portrait, ten film titles, durations,
+thumbnails, and video URLs. New projects can use either YouTube or Vimeo.
+Category labels and descriptive portfolio copy are editorial groupings for the
+website and can be revised when Dev supplies project briefs.
 
 ## Future restoration order
 

@@ -48,6 +48,16 @@ async function uploadImage(filename) {
   return asset._id
 }
 
+async function findOrCreateProject(item, document) {
+  const videoUrl = `https://vimeo.com/${item.vimeoId}`
+  const existingId = await client.fetch(
+    '*[_type == "project" && (videoUrl == $videoUrl || vimeoId == $vimeoId)][0]._id',
+    {videoUrl, vimeoId: item.vimeoId},
+  )
+  if (existingId) return client.createOrReplace({...document, _id: existingId})
+  return client.create(document)
+}
+
 const categoryDocuments = {}
 for (const item of categories) {
   const document = await findOrCreate('category', 'slug.current', item.slug, {
@@ -63,7 +73,7 @@ for (const item of categories) {
 const projectDocuments = {}
 for (const [index, item] of projects.entries()) {
   const imageId = await uploadImage(`${item.vimeoId}.webp`)
-  const document = await findOrCreate('project', 'vimeoId', item.vimeoId, {
+  const document = await findOrCreateProject(item, {
     _type: 'project',
     title: item.title,
     slug: {_type: 'slug', current: item.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')},
@@ -72,7 +82,7 @@ for (const [index, item] of projects.entries()) {
     duration: item.duration,
     order: index + 1,
     summary: item.summary,
-    vimeoId: item.vimeoId,
+    videoUrl: `https://vimeo.com/${item.vimeoId}`,
     thumbnail: {
       _type: 'image',
       asset: {_type: 'reference', _ref: imageId},

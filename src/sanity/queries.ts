@@ -25,6 +25,7 @@ export const HOME_QUERY = defineQuery(`{
       duration,
       order,
       summary,
+      videoUrl,
       vimeoId,
       thumbnail {asset->{_id, url, metadata {lqip, dimensions}}, alt, hotspot, crop}
     },
@@ -52,6 +53,7 @@ export const HOME_QUERY = defineQuery(`{
     duration,
     order,
     summary,
+    videoUrl,
     vimeoId,
     thumbnail {asset->{_id, url, metadata {lqip, dimensions}}, alt, hotspot, crop}
   },

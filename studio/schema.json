@@ -1597,7 +1597,7 @@
         },
         "optional": true
       },
-      "vimeoId": {
+      "videoUrl": {
         "type": "objectAttribute",
         "value": {
           "type": "string"

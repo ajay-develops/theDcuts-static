@@ -1,5 +1,18 @@
 import {defineField, defineType} from 'sanity'
 
+function validateVideoUrl(value?: string) {
+  if (!value) return true
+
+  try {
+    const hostname = new URL(value).hostname.toLowerCase().replace(/^www\./, '')
+    const isYouTube = hostname === 'youtu.be' || hostname === 'youtube.com' || hostname.endsWith('.youtube.com') || hostname === 'youtube-nocookie.com' || hostname.endsWith('.youtube-nocookie.com')
+    const isVimeo = hostname === 'vimeo.com' || hostname.endsWith('.vimeo.com')
+    return isYouTube || isVimeo || 'Use a YouTube or Vimeo video URL.'
+  } catch {
+    return 'Enter a valid YouTube or Vimeo URL.'
+  }
+}
+
 export const project = defineType({
   name: 'project',
   title: 'Project',
@@ -18,13 +31,21 @@ export const project = defineType({
     defineField({name: 'duration', title: 'Duration', description: 'Use MM:SS, for example 04:47.', type: 'string', group: 'content', validation: (rule) => rule.required().regex(/^\d{2}:\d{2}$/, {name: 'MM:SS'})}),
     defineField({name: 'order', title: 'Display order', type: 'number', group: 'content', initialValue: 100, validation: (rule) => rule.required().integer().min(0)}),
     defineField({name: 'summary', title: 'Short description', type: 'text', rows: 4, group: 'content'}),
-    defineField({name: 'vimeoId', title: 'Vimeo video ID', description: 'The numeric ID at the end of a Vimeo video URL.', type: 'string', group: 'media', validation: (rule) => rule.required().regex(/^\d+$/, {name: 'numeric Vimeo ID'})}),
+    defineField({
+      name: 'videoUrl',
+      title: 'YouTube or Vimeo URL',
+      description: 'Paste the full public or unlisted video URL. Private videos cannot be played on the portfolio.',
+      type: 'url',
+      group: 'media',
+      validation: (rule) => rule.required().uri({scheme: ['http', 'https']}).custom(validateVideoUrl),
+    }),
     defineField({
       name: 'thumbnail',
       title: 'Thumbnail',
       type: 'image',
       group: 'media',
       options: {hotspot: true},
+      description: 'Upload the still that should appear in the project grid and featured layout.',
       validation: (rule) => rule.required(),
       fields: [defineField({name: 'alt', title: 'Alternative text', type: 'string', validation: (rule) => rule.required().warning('Alternative text helps screen-reader users.')})],
     }),

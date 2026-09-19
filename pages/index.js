@@ -2,6 +2,7 @@ import Head from "next/head";
 import Link from "next/link";
 import {useEffect, useMemo, useState} from "react";
 import {gmailComposeUrl} from "../src/contact";
+import {getVideoEmbed} from "../src/video";
 import {sanityClient} from "../src/sanity/client";
 import {urlFor} from "../src/sanity/image";
 import {HOME_QUERY} from "../src/sanity/queries";
@@ -81,11 +82,11 @@ function sanityImage(source, width, height) {
 }
 
 function mapProject(project) {
-  const id = project?.vimeoId || project?.id;
+  const video = getVideoEmbed(project?.videoUrl, project?.vimeoId || project?.id);
   return {
     ...project,
-    id,
-    image: sanityImage(project?.thumbnail, 1400, 875) || project?.image || `/img/dev/${id}.webp`,
+    ...video,
+    image: sanityImage(project?.thumbnail, 1400, 875) || project?.image || `/img/dev/${video.id}.webp`,
     imageAlt: project?.thumbnail?.alt || `Still from ${project?.title || "project"}`,
   };
 }
@@ -256,11 +257,11 @@ export default function Home({cmsData}) {
           <button className="modal-backdrop" onClick={() => setActiveProject(null)} aria-label="Close video" />
           <div className="modal-content">
             <div className="modal-topbar">
-              <div><span>{activeProject.category}</span><strong>{activeProject.title}</strong></div>
+              <div><span>{[activeProject.category, activeProject.provider].filter(Boolean).join(" · ")}</span><strong>{activeProject.title}</strong></div>
               <button onClick={() => setActiveProject(null)} aria-label="Close video">Close</button>
             </div>
             <div className="video-frame">
-              <iframe src={`https://player.vimeo.com/video/${activeProject.id}?autoplay=1&title=0&byline=0&portrait=0`} title={activeProject.title} allow="autoplay; fullscreen; picture-in-picture" allowFullScreen />
+              <iframe src={activeProject.embedUrl} title={activeProject.title} allow="autoplay; fullscreen; picture-in-picture; encrypted-media" allowFullScreen />
             </div>
           </div>
         </div>

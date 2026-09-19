@@ -16,6 +16,10 @@ The content editor is deployed at
 Deleting a referenced category or featured project may be blocked until its
 references are changed. This protects the live layout from broken records.
 
+Projects accept full YouTube and Vimeo URLs. Paste the video URL, upload a
+thumbnail still, add its alternative text, and publish. Public and unlisted
+videos can play in the portfolio; private videos cannot be embedded.
+
 ## Future sections
 
 The Studio also contains Testimonials, Experience, Skills, and Posts. Their
