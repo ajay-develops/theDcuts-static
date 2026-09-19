@@ -39,7 +39,7 @@ and what should be restored when verified portfolio content becomes available.
 | Blog/news cards | No articles or behind-the-scenes posts were supplied | Title, summary, date, cover image, and article URL/content |
 | Animated counters | Only film count and Vimeo join date are verified | Years of experience, completed projects, clients, awards, views, or other verified metrics |
 | Service detail modals | The films show capabilities but not formal packages or case studies | Service scope, deliverables, typical turnaround, tools, process, and optional pricing language |
-| Contact form | A public email exists, but no form delivery service or consent copy was supplied | Destination inbox, form fields, spam protection, privacy copy, and delivery credentials |
+| Contact form delivery | The `/start-a-project` form UI, consent copy, Gmail fallback, and spam honeypot are live; submission stays disabled until the Formspree form ID is supplied | Formspree form ID for the form that delivers to `davender350@gmail.com` |
 | Portfolio case-study modals | Vimeo supplies titles, durations, thumbnails, and video links only | Client, brief, Dev's role, edit decisions, tools, date, credits, and outcome |
 
 ## CMS readiness

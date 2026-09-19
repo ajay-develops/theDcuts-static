@@ -33,3 +33,11 @@ already modeled in the CMS.
 
 The seed is intended for setup or recovery. Normal content changes should be
 made in the Studio.
+
+## Project enquiry form
+
+The `/start-a-project` page submits to Formspree when
+`NEXT_PUBLIC_FORMSPREE_FORM_ID` is set. Create a Formspree form that sends
+notifications to `davender350@gmail.com`, then add only the form ID (the short
+value after `/f/` in the endpoint) to Vercel. The form ID is public by design;
+no API secret is stored in the browser.

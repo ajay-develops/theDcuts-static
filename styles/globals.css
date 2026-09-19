@@ -133,6 +133,43 @@ svg { width: 1.2em; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-
 .video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 :focus-visible { outline: 2px solid var(--red); outline-offset: 4px; }
 
+.inquiry-page { min-height: 100svh; padding: 150px clamp(24px, 5vw, 80px) 90px; background: var(--ink); }
+.inquiry-intro { display: grid; grid-template-columns: 0.48fr 1.52fr; align-items: end; gap: 28px; padding: 60px 0 95px; border-bottom: 1px solid var(--line); }
+.inquiry-intro > p:first-child, .inquiry-label { margin: 0; color: var(--red); font-size: 13px; font-weight: 600; letter-spacing: 0.08em; }
+.inquiry-intro h1 { margin: 0; font-family: "League Gothic", "Arial Narrow", sans-serif; font-size: clamp(100px, 13vw, 210px); font-weight: 400; letter-spacing: -0.025em; line-height: 0.82; text-transform: uppercase; animation: hero-rise 720ms cubic-bezier(.2,.75,.25,1) both; }
+.inquiry-intro h1 em { color: var(--red); font-style: normal; }
+.inquiry-lede { grid-column: 2; max-width: 650px; margin: 20px 0 0; color: #c4c1bb; font-size: clamp(17px, 1.3vw, 21px); }
+.inquiry-layout { display: grid; grid-template-columns: minmax(270px, 0.68fr) minmax(0, 1.32fr); gap: clamp(55px, 8vw, 130px); padding-top: 90px; }
+.inquiry-aside { align-self: start; position: sticky; top: 40px; }
+.inquiry-aside h2 { max-width: 420px; margin: 22px 0 34px; font-size: clamp(28px, 3vw, 48px); font-weight: 500; letter-spacing: -0.045em; line-height: 1.05; }
+.gmail-button, .form-submit { display: inline-flex; align-items: center; justify-content: center; gap: 18px; min-height: 58px; border: 0; padding: 0 24px; background: var(--red); color: var(--paper); font-weight: 600; cursor: pointer; }
+.gmail-button svg, .form-submit svg { transition: transform 180ms ease; }
+.gmail-button:hover svg, .gmail-button:focus-visible svg, .form-submit:hover svg, .form-submit:focus-visible svg { transform: translateX(5px); }
+.email-fallback { max-width: 380px; margin: 24px 0 0; color: var(--silver); font-size: 12px; }
+.email-fallback span { color: var(--paper); user-select: all; }
+.inquiry-expectation { margin-top: 65px; padding-top: 24px; border-top: 1px solid var(--line); }
+.inquiry-expectation > span { color: var(--silver); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; }
+.inquiry-expectation ul { margin: 18px 0 0; padding: 0; list-style: none; }
+.inquiry-expectation li { padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 13px; }
+.project-form { display: grid; gap: 28px; padding: clamp(30px, 4vw, 60px); background: var(--paper); color: var(--ink); }
+.form-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
+.project-form label { display: grid; gap: 10px; }
+.project-form label > span { font-size: 12px; font-weight: 600; }
+.project-form label small { color: #77736b; font-size: 10px; font-weight: 400; }
+.project-form input:not([type="checkbox"]), .project-form select, .project-form textarea { width: 100%; border: 0; border-bottom: 1px solid rgba(8, 8, 8, 0.3); border-radius: 0; padding: 13px 0; background: transparent; color: var(--ink); font: inherit; font-size: 15px; outline: none; }
+.project-form textarea { resize: vertical; min-height: 150px; }
+.project-form input:focus, .project-form select:focus, .project-form textarea:focus { border-bottom-color: var(--red); }
+.project-form input::placeholder, .project-form textarea::placeholder { color: #8c8982; }
+.consent-field { grid-template-columns: auto 1fr; align-items: start; gap: 12px !important; }
+.consent-field input { width: 17px; height: 17px; margin: 2px 0 0; accent-color: var(--red); }
+.consent-field span { color: #5a5955; font-weight: 400 !important; line-height: 1.5; }
+.form-submit { width: max-content; margin-top: 6px; }
+.form-submit:disabled { cursor: wait; opacity: 0.65; }
+.form-status, .form-setup-note { margin: -10px 0 0; font-size: 12px; }
+.form-status.success { color: #28633a; }
+.form-status.error, .form-setup-note { color: #9b332c; }
+.form-honeypot { position: absolute !important; left: -10000px !important; width: 1px !important; height: 1px !important; opacity: 0 !important; }
+
 @keyframes hero-rise {
   from { opacity: 0; transform: translateY(24px); }
   to { opacity: 1; transform: translateY(0); }
@@ -152,6 +189,7 @@ svg { width: 1.2em; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-
   .about-facts { grid-column: 2; display: grid; grid-template-columns: repeat(3, 1fr); }
   .about-facts div { display: block; }
   .about-facts span { display: block; max-width: none; text-align: left; }
+  .inquiry-layout { grid-template-columns: 0.8fr 1.2fr; gap: 45px; }
 }
 
 @media (max-width: 760px) {
@@ -189,6 +227,16 @@ svg { width: 1.2em; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-
   .contact-section h2 { font-size: clamp(110px, 37vw, 170px); }
   .contact-footer { grid-template-columns: 1fr auto; row-gap: 15px; }
   .contact-footer span:first-child { grid-column: 1 / -1; }
+  .inquiry-page { padding: 118px 20px 70px; }
+  .inquiry-intro { display: block; padding: 45px 0 65px; }
+  .inquiry-intro h1 { margin-top: 30px; font-size: clamp(95px, 30vw, 145px); }
+  .inquiry-lede { margin-top: 30px; }
+  .inquiry-layout { display: block; padding-top: 65px; }
+  .inquiry-aside { position: static; }
+  .inquiry-expectation { margin-top: 45px; }
+  .project-form { margin-top: 65px; padding: 32px 20px; }
+  .form-row { grid-template-columns: 1fr; }
+  .form-submit { width: 100%; }
 }
 
 @media (prefers-reduced-motion: reduce) {

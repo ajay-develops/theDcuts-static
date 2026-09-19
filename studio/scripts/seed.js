@@ -92,7 +92,6 @@ for (const [index, item] of services.entries()) {
 }
 
 const portraitId = await uploadImage('portrait-hd.webp')
-const shareImageId = await uploadImage('930782402.webp')
 
 await client.createOrReplace({
   _id: 'siteSettings',
@@ -102,7 +101,7 @@ await client.createOrReplace({
   location: 'Punjab, India',
   seoTitle: 'Devender Saroha — Video Editor',
   seoDescription: 'Portfolio of Devender Saroha, a video editor crafting narrative films, motion graphics, documentaries, travel stories, and visual effects.',
-  shareImage: {_type: 'image', asset: {_type: 'reference', _ref: shareImageId}, alt: 'DILLI film still'},
+  shareImage: {_type: 'image', asset: {_type: 'reference', _ref: portraitId}, alt: 'Devender Saroha'},
   heroEyebrow: 'Video editor · Punjab, India',
   heroTitle: 'Stories cut\nto',
   heroEmphasis: 'move.',

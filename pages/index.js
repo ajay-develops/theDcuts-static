@@ -1,5 +1,7 @@
 import Head from "next/head";
+import Link from "next/link";
 import {useEffect, useMemo, useState} from "react";
+import {gmailComposeUrl} from "../src/contact";
 import {sanityClient} from "../src/sanity/client";
 import {urlFor} from "../src/sanity/image";
 import {HOME_QUERY} from "../src/sanity/queries";
@@ -97,7 +99,7 @@ export default function Home({cmsData}) {
     facts: cmsSite.facts?.length ? cmsSite.facts : DEFAULT_SITE.facts,
     socialLinks: cmsSite.socialLinks?.length ? cmsSite.socialLinks : DEFAULT_SITE.socialLinks,
     portraitUrl: sanityImage(cmsSite.portrait, 1100, 1450) || DEFAULT_SITE.portraitUrl,
-    shareImageUrl: sanityImage(cmsSite.shareImage, 1200, 630) || "/img/dev/930782402.webp",
+    shareImageUrl: sanityImage(cmsSite.shareImage, 1200, 630) || "https://the-dcuts-static.vercel.app/img/dev/portrait-hd.webp",
   };
   const projects = cmsData?.projects?.length ? cmsData.projects.map(mapProject) : DEFAULT_PROJECTS;
   const services = cmsData?.services?.length ? cmsData.services : DEFAULT_SERVICES;
@@ -136,6 +138,8 @@ export default function Home({cmsData}) {
         <meta property="og:title" content={site.seoTitle} />
         <meta property="og:description" content={site.seoDescription} />
         <meta property="og:image" content={site.shareImageUrl} />
+        <meta property="og:image:alt" content={`${site.name} profile portrait`} />
+        <meta name="twitter:card" content="summary_large_image" />
       </Head>
 
       <header className="site-header">
@@ -145,7 +149,7 @@ export default function Home({cmsData}) {
           <a href="#about">About</a>
           <a href="#services">Services</a>
         </nav>
-        <a className="header-cta" href={`mailto:${site.email}`}>Start a project</a>
+        <Link className="header-cta" href="/start-a-project">Start a project</Link>
       </header>
 
       <main id="top">
@@ -156,7 +160,7 @@ export default function Home({cmsData}) {
             <p className="hero-intro">{site.heroIntroduction}</p>
             <div className="hero-actions">
               <a className="primary-button" href="#work">{site.primaryCtaLabel} <ArrowIcon /></a>
-              <a className="text-link" href={`mailto:${site.email}`}>{site.email}</a>
+              <a className="text-link" href={gmailComposeUrl()} target="_blank" rel="noreferrer">{site.email}</a>
             </div>
           </div>
 
@@ -238,7 +242,7 @@ export default function Home({cmsData}) {
         <section className="contact-section" id="contact">
           <p>{site.contactEyebrow}</p>
           <h2><LineBreaks text={site.contactTitle} /></h2>
-          <a href={`mailto:${site.email}`}>{site.contactCtaLabel} <ArrowIcon /></a>
+          <Link href="/start-a-project">{site.contactCtaLabel} <ArrowIcon /></Link>
           <div className="contact-footer">
             <span>{site.name} · {site.role}</span>
             <span className="contact-socials">{site.socialLinks.map((link) => <a key={link._key || link.url} href={link.url} target="_blank" rel="noreferrer">{link.label}</a>)}</span>
