@@ -79,7 +79,7 @@ export default function Home() {
           </div>
 
           <div className="hero-portrait">
-            <div className="portrait-frame"><img src="/img/dev/portrait.webp" alt="Devender Saroha" /></div>
+            <div className="portrait-frame"><img src="/img/dev/portrait-hd.webp" alt="Devender Saroha" /></div>
             <div className="vertical-word" aria-hidden="true">DEV</div>
             <div className="availability"><span /> Available for projects</div>
           </div>
