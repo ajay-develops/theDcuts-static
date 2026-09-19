@@ -81,10 +81,8 @@ svg { width: 1.2em; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-
 .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 36px; }
 .filters button { border: 1px solid var(--line); border-radius: 100px; padding: 10px 17px; background: transparent; color: var(--silver); font-size: 12px; cursor: pointer; }
 .filters button.active, .filters button:hover, .filters button:focus-visible { border-color: var(--paper); background: var(--paper); color: var(--ink); }
-.project-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 64px 24px; }
-.project-card { grid-column: span 6; }
-.project-card:nth-child(4n + 2), .project-card:nth-child(4n + 3) { grid-column: span 5; }
-.project-card:nth-child(4n + 3) { grid-column-start: 3; }
+.project-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 64px 24px; }
+.project-card { min-width: 0; }
 .project-image { position: relative; display: block; width: 100%; aspect-ratio: 16 / 10; overflow: hidden; border: 0; padding: 0; background: var(--charcoal); cursor: pointer; }
 .project-image img { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.65); transition: transform 600ms cubic-bezier(.2,.75,.25,1), filter 250ms ease; }
 .project-image:hover img, .project-image:focus-visible img { transform: scale(1.035); filter: saturate(1); }
