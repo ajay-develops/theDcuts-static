@@ -118,6 +118,7 @@ svg { width: 1.2em; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-
 .contact-section > a { display: inline-flex; align-items: center; gap: 18px; width: max-content; margin-top: 50px; padding-bottom: 8px; border-bottom: 2px solid currentColor; font-size: clamp(18px, 1.6vw, 25px); font-weight: 600; }
 .contact-footer { display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; margin-top: auto; padding-top: 80px; color: #5a5955; font-size: 11px; }
 .contact-footer a { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
+.contact-socials { display: flex; gap: 18px; }
 .contact-footer span:last-child { justify-self: end; }
 
 .video-modal { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: clamp(16px, 4vw, 64px); }

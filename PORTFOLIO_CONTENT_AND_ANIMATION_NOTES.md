@@ -42,6 +42,19 @@ and what should be restored when verified portfolio content becomes available.
 | Contact form | A public email exists, but no form delivery service or consent copy was supplied | Destination inbox, form fields, spam protection, privacy copy, and delivery credentials |
 | Portfolio case-study modals | Vimeo supplies titles, durations, thumbnails, and video links only | Client, brief, Dev's role, edit decisions, tools, date, credits, and outcome |
 
+## CMS readiness
+
+- The live hero, featured project, project grid, categories, services, about
+  copy, facts, contact details, social links, portrait, and SEO now come from
+  Sanity. The original local content remains as a safe rendering fallback.
+- Sanity document types now exist for testimonials, experience, skills, posts,
+  and project case-study details. These types deliberately do not activate the
+  preserved template sections until real content is published and the matching
+  UI is restored and validated.
+- Add future content in the Studio rather than inventing placeholders. When a
+  section has complete data, restore its preserved component and motion from
+  `src/` and `styles/template-legacy.css`.
+
 ## Current verified source data
 
 The live site uses Devender's public Vimeo profile for his name, location,
@@ -51,10 +64,9 @@ groupings for the website and can be revised when Dev supplies project briefs.
 
 ## Future restoration order
 
-1. Add case-study fields to the `projects` data in `pages/index.js`, then adapt
-   the preserved portfolio modal.
-2. Add verified testimonials and restore the Swiper carousel.
-3. Add verified timeline and metric data, then restore resume and counter UI.
+1. Populate the existing Sanity case-study fields, then adapt the preserved
+   portfolio modal.
+2. Publish verified Sanity testimonials and restore the Swiper carousel.
+3. Publish verified experience and skill records, then restore the resume UI.
 4. Reintroduce parallax or moving decorations one at a time and validate mobile,
    keyboard, and reduced-motion behavior after each addition.
-
