@@ -26,7 +26,6 @@ export const HOME_QUERY = defineQuery(`{
       order,
       summary,
       videoUrl,
-      vimeoId,
       thumbnail {asset->{_id, url, metadata {lqip, dimensions}}, alt, hotspot, crop}
     },
     workEyebrow,
@@ -54,7 +53,6 @@ export const HOME_QUERY = defineQuery(`{
     order,
     summary,
     videoUrl,
-    vimeoId,
     thumbnail {asset->{_id, url, metadata {lqip, dimensions}}, alt, hotspot, crop}
   },
   "services": *[_type == "service"] | order(order asc, _createdAt asc){

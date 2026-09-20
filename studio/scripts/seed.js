@@ -16,44 +16,109 @@ const categories = [
 ]
 
 const projects = [
-  {vimeoId: '930753990', title: 'The universe exists within us', category: 'narrative', duration: '00:18', year: 2024},
-  {vimeoId: '930782402', title: 'DILLI', category: 'motion', duration: '00:49', year: 2024},
-  {vimeoId: '930759603', title: 'What Are We?', category: 'narrative', duration: '00:56', year: 2024},
-  {vimeoId: '930762054', title: 'ZERO', category: 'motion', duration: '00:36', year: 2024},
-  {vimeoId: '930767160', title: 'Teleport Effect', category: 'vfx', duration: '00:15', year: 2024},
-  {vimeoId: '930769396', title: "Citizen's Thoughts", category: 'motion', duration: '00:09', year: 2024},
-  {vimeoId: '931046018', title: 'Delhi Under the Smog', category: 'documentary', duration: '04:47', year: 2024, summary: 'A hard-edged visual story about a city struggling to breathe, built through atmosphere, pacing, and documentary detail.'},
-  {vimeoId: '931463872', title: 'Different Delhi', category: 'travel', duration: '00:44', year: 2024},
-  {vimeoId: '930775010', title: 'D.B. Cooper: Where Are You?', category: 'narrative', duration: '00:57', year: 2024},
-  {vimeoId: '934436545', title: 'Creators United 2.0', category: 'motion', duration: '00:30', year: 2024},
+  {
+    videoId: '930753990',
+    title: 'The universe exists within us',
+    category: 'narrative',
+    duration: '00:18',
+    year: 2024,
+  },
+  {videoId: '930782402', title: 'DILLI', category: 'motion', duration: '00:49', year: 2024},
+  {
+    videoId: '930759603',
+    title: 'What Are We?',
+    category: 'narrative',
+    duration: '00:56',
+    year: 2024,
+  },
+  {videoId: '930762054', title: 'ZERO', category: 'motion', duration: '00:36', year: 2024},
+  {videoId: '930767160', title: 'Teleport Effect', category: 'vfx', duration: '00:15', year: 2024},
+  {
+    videoId: '930769396',
+    title: "Citizen's Thoughts",
+    category: 'motion',
+    duration: '00:09',
+    year: 2024,
+  },
+  {
+    videoId: '931046018',
+    title: 'Delhi Under the Smog',
+    category: 'documentary',
+    duration: '04:47',
+    year: 2024,
+    summary:
+      'A hard-edged visual story about a city struggling to breathe, built through atmosphere, pacing, and documentary detail.',
+  },
+  {
+    videoId: '931463872',
+    title: 'Different Delhi',
+    category: 'travel',
+    duration: '00:44',
+    year: 2024,
+  },
+  {
+    videoId: '930775010',
+    title: 'D.B. Cooper: Where Are You?',
+    category: 'narrative',
+    duration: '00:57',
+    year: 2024,
+  },
+  {
+    videoId: '934436545',
+    title: 'Creators United 2.0',
+    category: 'motion',
+    duration: '00:30',
+    year: 2024,
+  },
 ]
 
 const services = [
-  {title: 'Video editing', description: 'Story structure, pacing, selects, and polished final cuts.'},
-  {title: 'Motion graphics', description: 'Titles, logo animation, kinetic typography, and transitions.'},
-  {title: 'Colour & finish', description: 'Colour balance, sound polish, exports, and delivery formats.'},
-  {title: 'Visual effects', description: 'Compositing, screen work, clean-up, and stylised effects.'},
+  {
+    title: 'Video editing',
+    description: 'Story structure, pacing, selects, and polished final cuts.',
+  },
+  {
+    title: 'Motion graphics',
+    description: 'Titles, logo animation, kinetic typography, and transitions.',
+  },
+  {
+    title: 'Colour & finish',
+    description: 'Colour balance, sound polish, exports, and delivery formats.',
+  },
+  {
+    title: 'Visual effects',
+    description: 'Compositing, screen work, clean-up, and stylised effects.',
+  },
 ]
 
 async function findOrCreate(type, field, value, document) {
-  const existingId = await client.fetch(`*[_type == $type && ${field} == $value][0]._id`, {type, value})
+  const existingId = await client.fetch(`*[_type == $type && ${field} == $value][0]._id`, {
+    type,
+    value,
+  })
   if (existingId) return client.createOrReplace({...document, _id: existingId})
   return client.create(document)
 }
 
 async function uploadImage(filename) {
-  const existingId = await client.fetch('*[_type == "sanity.imageAsset" && originalFilename == $filename][0]._id', {filename})
+  const existingId = await client.fetch(
+    '*[_type == "sanity.imageAsset" && originalFilename == $filename][0]._id',
+    {filename},
+  )
   if (existingId) return existingId
-  const asset = await client.assets.upload('image', fs.createReadStream(path.join(assetDirectory, filename)), {filename})
+  const asset = await client.assets.upload(
+    'image',
+    fs.createReadStream(path.join(assetDirectory, filename)),
+    {filename},
+  )
   return asset._id
 }
 
 async function findOrCreateProject(item, document) {
-  const videoUrl = `https://vimeo.com/${item.vimeoId}`
-  const existingId = await client.fetch(
-    '*[_type == "project" && (videoUrl == $videoUrl || vimeoId == $vimeoId)][0]._id',
-    {videoUrl, vimeoId: item.vimeoId},
-  )
+  const videoUrl = `https://vimeo.com/${item.videoId}`
+  const existingId = await client.fetch('*[_type == "project" && videoUrl == $videoUrl][0]._id', {
+    videoUrl,
+  })
   if (existingId) return client.createOrReplace({...document, _id: existingId})
   return client.create(document)
 }
@@ -63,7 +128,6 @@ for (const item of categories) {
   const document = await findOrCreate('category', 'slug.current', item.slug, {
     _type: 'category',
     title: item.title,
-    displayTitle: item.vimeoId === '931046018' ? 'Delhi\nUnder the Smog' : item.title,
     slug: {_type: 'slug', current: item.slug},
     order: item.order,
   })
@@ -72,24 +136,30 @@ for (const item of categories) {
 
 const projectDocuments = {}
 for (const [index, item] of projects.entries()) {
-  const imageId = await uploadImage(`${item.vimeoId}.webp`)
+  const imageId = await uploadImage(`${item.videoId}.webp`)
   const document = await findOrCreateProject(item, {
     _type: 'project',
     title: item.title,
-    slug: {_type: 'slug', current: item.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')},
+    slug: {
+      _type: 'slug',
+      current: item.title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, ''),
+    },
     category: {_type: 'reference', _ref: categoryDocuments[item.category]},
     year: item.year,
     duration: item.duration,
     order: index + 1,
     summary: item.summary,
-    videoUrl: `https://vimeo.com/${item.vimeoId}`,
+    videoUrl: `https://vimeo.com/${item.videoId}`,
     thumbnail: {
       _type: 'image',
       asset: {_type: 'reference', _ref: imageId},
       alt: `Still from ${item.title}`,
     },
   })
-  projectDocuments[item.vimeoId] = document._id
+  projectDocuments[item.videoId] = document._id
 }
 
 for (const [index, item] of services.entries()) {
@@ -110,12 +180,18 @@ await client.createOrReplace({
   role: 'Video Editor',
   location: 'Punjab, India',
   seoTitle: 'Devender Saroha — Video Editor',
-  seoDescription: 'Portfolio of Devender Saroha, a video editor crafting narrative films, motion graphics, documentaries, travel stories, and visual effects.',
-  shareImage: {_type: 'image', asset: {_type: 'reference', _ref: portraitId}, alt: 'Devender Saroha'},
+  seoDescription:
+    'Portfolio of Devender Saroha, a video editor crafting narrative films, motion graphics, documentaries, travel stories, and visual effects.',
+  shareImage: {
+    _type: 'image',
+    asset: {_type: 'reference', _ref: portraitId},
+    alt: 'Devender Saroha',
+  },
   heroEyebrow: 'Video editor · Punjab, India',
   heroTitle: 'Stories cut\nto',
   heroEmphasis: 'move.',
-  heroIntroduction: "I'm Devender Saroha. I shape raw footage into films with rhythm, clarity, and a visual pulse.",
+  heroIntroduction:
+    "I'm Devender Saroha. I shape raw footage into films with rhythm, clarity, and a visual pulse.",
   primaryCtaLabel: 'Watch selected work',
   availability: 'Available for projects',
   portrait: {_type: 'image', asset: {_type: 'reference', _ref: portraitId}, alt: 'Devender Saroha'},

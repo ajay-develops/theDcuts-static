@@ -427,7 +427,7 @@ export type AllSanitySchemaTypes =
 
 // Source: ../src/sanity/queries.ts
 // Variable: HOME_QUERY
-// Query: {  "site": *[_id == "siteSettings"][0]{    name,    role,    location,    seoTitle,    seoDescription,    shareImage {asset->{_id, url}, alt, hotspot, crop},    heroEyebrow,    heroTitle,    heroEmphasis,    heroIntroduction,    primaryCtaLabel,    availability,    portrait {asset->{_id, url}, alt, hotspot, crop},    "featuredProject": featuredProject->{      _id,      title,      displayTitle,      "slug": slug.current,      "category": category->title,      year,      duration,      order,      summary,      videoUrl,      vimeoId,      thumbnail {asset->{_id, url, metadata {lqip, dimensions}}, alt, hotspot, crop}    },    workEyebrow,    workTitle,    aboutLabel,    aboutTitle,    aboutParagraphs,    facts[]{_key, value, label},    servicesEyebrow,    servicesTitle,    contactEyebrow,    contactTitle,    contactCtaLabel,    email,    socialLinks[]{_key, label, url}  },  "projects": *[_type == "project"] | order(order asc, _createdAt asc){    _id,    title,    displayTitle,    "slug": slug.current,    "category": category->title,    year,    duration,    order,    summary,    videoUrl,    vimeoId,    thumbnail {asset->{_id, url, metadata {lqip, dimensions}}, alt, hotspot, crop}  },  "services": *[_type == "service"] | order(order asc, _createdAt asc){    _id,    title,    description,    order  }}
+// Query: {  "site": *[_id == "siteSettings"][0]{    name,    role,    location,    seoTitle,    seoDescription,    shareImage {asset->{_id, url}, alt, hotspot, crop},    heroEyebrow,    heroTitle,    heroEmphasis,    heroIntroduction,    primaryCtaLabel,    availability,    portrait {asset->{_id, url}, alt, hotspot, crop},    "featuredProject": featuredProject->{      _id,      title,      displayTitle,      "slug": slug.current,      "category": category->title,      year,      duration,      order,      summary,      videoUrl,      thumbnail {asset->{_id, url, metadata {lqip, dimensions}}, alt, hotspot, crop}    },    workEyebrow,    workTitle,    aboutLabel,    aboutTitle,    aboutParagraphs,    facts[]{_key, value, label},    servicesEyebrow,    servicesTitle,    contactEyebrow,    contactTitle,    contactCtaLabel,    email,    socialLinks[]{_key, label, url}  },  "projects": *[_type == "project"] | order(order asc, _createdAt asc){    _id,    title,    displayTitle,    "slug": slug.current,    "category": category->title,    year,    duration,    order,    summary,    videoUrl,    thumbnail {asset->{_id, url, metadata {lqip, dimensions}}, alt, hotspot, crop}  },  "services": *[_type == "service"] | order(order asc, _createdAt asc){    _id,    title,    description,    order  }}
 export type HOME_QUERY_RESULT = {
   site:
     | {
@@ -624,7 +624,6 @@ export type HOME_QUERY_RESULT = {
           order: number | null;
           summary: string | null;
           videoUrl: string | null;
-          vimeoId: null;
           thumbnail: {
             asset: {
               _id: string;
@@ -673,7 +672,6 @@ export type HOME_QUERY_RESULT = {
     order: number | null;
     summary: string | null;
     videoUrl: string | null;
-    vimeoId: null;
     thumbnail: {
       asset: {
         _id: string;
@@ -699,7 +697,7 @@ export type HOME_QUERY_RESULT = {
 // Query TypeMap
 declare global {
   interface SanityQueries {
-    '{\n  "site": *[_id == "siteSettings"][0]{\n    name,\n    role,\n    location,\n    seoTitle,\n    seoDescription,\n    shareImage {asset->{_id, url}, alt, hotspot, crop},\n    heroEyebrow,\n    heroTitle,\n    heroEmphasis,\n    heroIntroduction,\n    primaryCtaLabel,\n    availability,\n    portrait {asset->{_id, url}, alt, hotspot, crop},\n    "featuredProject": featuredProject->{\n      _id,\n      title,\n      displayTitle,\n      "slug": slug.current,\n      "category": category->title,\n      year,\n      duration,\n      order,\n      summary,\n      videoUrl,\n      vimeoId,\n      thumbnail {asset->{_id, url, metadata {lqip, dimensions}}, alt, hotspot, crop}\n    },\n    workEyebrow,\n    workTitle,\n    aboutLabel,\n    aboutTitle,\n    aboutParagraphs,\n    facts[]{_key, value, label},\n    servicesEyebrow,\n    servicesTitle,\n    contactEyebrow,\n    contactTitle,\n    contactCtaLabel,\n    email,\n    socialLinks[]{_key, label, url}\n  },\n  "projects": *[_type == "project"] | order(order asc, _createdAt asc){\n    _id,\n    title,\n    displayTitle,\n    "slug": slug.current,\n    "category": category->title,\n    year,\n    duration,\n    order,\n    summary,\n    videoUrl,\n    vimeoId,\n    thumbnail {asset->{_id, url, metadata {lqip, dimensions}}, alt, hotspot, crop}\n  },\n  "services": *[_type == "service"] | order(order asc, _createdAt asc){\n    _id,\n    title,\n    description,\n    order\n  }\n}': HOME_QUERY_RESULT;
+    '{\n  "site": *[_id == "siteSettings"][0]{\n    name,\n    role,\n    location,\n    seoTitle,\n    seoDescription,\n    shareImage {asset->{_id, url}, alt, hotspot, crop},\n    heroEyebrow,\n    heroTitle,\n    heroEmphasis,\n    heroIntroduction,\n    primaryCtaLabel,\n    availability,\n    portrait {asset->{_id, url}, alt, hotspot, crop},\n    "featuredProject": featuredProject->{\n      _id,\n      title,\n      displayTitle,\n      "slug": slug.current,\n      "category": category->title,\n      year,\n      duration,\n      order,\n      summary,\n      videoUrl,\n      thumbnail {asset->{_id, url, metadata {lqip, dimensions}}, alt, hotspot, crop}\n    },\n    workEyebrow,\n    workTitle,\n    aboutLabel,\n    aboutTitle,\n    aboutParagraphs,\n    facts[]{_key, value, label},\n    servicesEyebrow,\n    servicesTitle,\n    contactEyebrow,\n    contactTitle,\n    contactCtaLabel,\n    email,\n    socialLinks[]{_key, label, url}\n  },\n  "projects": *[_type == "project"] | order(order asc, _createdAt asc){\n    _id,\n    title,\n    displayTitle,\n    "slug": slug.current,\n    "category": category->title,\n    year,\n    duration,\n    order,\n    summary,\n    videoUrl,\n    thumbnail {asset->{_id, url, metadata {lqip, dimensions}}, alt, hotspot, crop}\n  },\n  "services": *[_type == "service"] | order(order asc, _createdAt asc){\n    _id,\n    title,\n    description,\n    order\n  }\n}': HOME_QUERY_RESULT;
   }
 }
 // Lets @sanity/client releases that predate the global registry read it too

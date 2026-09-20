@@ -95,7 +95,7 @@ function sanityImageSrcSet(source, widths, aspectRatio) {
 function mapProject(project) {
   const video = getVideoEmbed(
     stegaClean(project?.videoUrl),
-    stegaClean(project?.vimeoId || project?.id),
+    stegaClean(project?.id),
   );
   const thumbnail = project?.thumbnail;
   return {

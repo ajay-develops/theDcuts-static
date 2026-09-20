@@ -9,7 +9,9 @@
     "cms:dev": "npm --prefix studio run dev",
     "cms:build": "npm --prefix studio run build",
     "cms:deploy": "npm --prefix studio run deploy",
-    "cms:seed": "cd studio && npx sanity exec scripts/seed.js --with-user-token"
+    "cms:seed": "cd studio && npx sanity exec scripts/seed.js --with-user-token",
+    "cms:audit-legacy": "cd studio && npx sanity exec scripts/cleanup-legacy-fields.js --with-user-token",
+    "cms:cleanup-legacy": "cd studio && SANITY_CLEANUP_APPLY=1 npx sanity exec scripts/cleanup-legacy-fields.js --with-user-token"
   },
   "dependencies": {
     "@sanity/image-url": "^1.2.0",
