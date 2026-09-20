@@ -5,6 +5,9 @@ export const sanityConfig = {
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
   apiVersion: "2026-09-19",
   useCdn: true,
+  stega: {
+    studioUrl: process.env.NEXT_PUBLIC_SANITY_STUDIO_URL || "https://devender-saroha-portfolio.sanity.studio",
+  },
 };
 
 export const sanityClient = createClient(sanityConfig);

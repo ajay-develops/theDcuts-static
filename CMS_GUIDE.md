@@ -6,6 +6,18 @@ The public website's `/studio` address redirects to this editor, and the Studio
 navbar includes a **View website** button that opens the live portfolio in a new
 tab.
 
+## Live preview
+
+Open **Presentation** in the Studio navigation to edit with the portfolio beside
+the document form. Draft changes appear in the preview as they are typed, and
+clicking highlighted text in the preview opens its source field in the Studio.
+The preview includes unpublished drafts; the public website continues to show
+published content only.
+
+When a preview is opened in its own browser tab, use **Exit live preview** in the
+bottom-right corner to return to the published site. Preview access is protected
+by Sanity's short-lived preview URL secrets and a server-only Viewer token.
+
 ## Editing the live site
 
 1. Sign in to the Studio with a Sanity project member account.

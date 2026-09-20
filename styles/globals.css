@@ -130,6 +130,8 @@ svg { width: 1.2em; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-
 .modal-topbar button { border: 0; background: transparent; color: var(--silver); font-size: 12px; cursor: pointer; }
 .video-frame { position: relative; aspect-ratio: 16 / 9; background: #000; }
 .video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.disable-draft-mode { position: fixed; right: 20px; bottom: 20px; z-index: 10001; border: 1px solid rgba(255,255,255,.28); border-radius: 999px; padding: 11px 17px; background: rgba(8,8,8,.92); color: var(--paper); box-shadow: 0 8px 30px rgba(0,0,0,.28); font-size: 12px; font-weight: 600; text-decoration: none; backdrop-filter: blur(12px); }
+.disable-draft-mode:hover, .disable-draft-mode:focus-visible { border-color: var(--paper); background: var(--paper); color: var(--ink); }
 :focus-visible { outline: 2px solid var(--red); outline-offset: 4px; }
 
 .inquiry-page { min-height: 100svh; padding: 150px clamp(24px, 5vw, 80px) 90px; background: var(--ink); }

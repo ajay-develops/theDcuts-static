@@ -1,11 +1,15 @@
 import Head from "next/head";
 import Link from "next/link";
+import dynamic from "next/dynamic";
+import {stegaClean} from "next-sanity";
 import {useEffect, useMemo, useState} from "react";
 import {gmailComposeUrl} from "../src/contact";
 import {getVideoEmbed} from "../src/video";
 import {sanityClient} from "../src/sanity/client";
 import {urlFor} from "../src/sanity/image";
 import {HOME_QUERY} from "../src/sanity/queries";
+
+const SanityPreviewData = dynamic(() => import("../src/components/SanityPreviewData"));
 
 const DEFAULT_PROJECTS = [
   {id: "930753990", title: "The universe exists within us", category: "Narrative", duration: "00:18", year: 2024, image: "/img/dev/930753990.webp"},
@@ -89,18 +93,35 @@ function sanityImageSrcSet(source, widths, aspectRatio) {
 }
 
 function mapProject(project) {
-  const video = getVideoEmbed(project?.videoUrl, project?.vimeoId || project?.id);
+  const video = getVideoEmbed(
+    stegaClean(project?.videoUrl),
+    stegaClean(project?.vimeoId || project?.id),
+  );
   const thumbnail = project?.thumbnail;
   return {
     ...project,
     ...video,
+    categoryLabel: project?.category,
+    category: stegaClean(project?.category),
     image: sanityImage(thumbnail, 1000, 625) || project?.image || `/img/dev/${video.id}.webp`,
     imageSrcSet: sanityImageSrcSet(thumbnail, [320, 480, 640, 1000, 1400], 1.6),
-    imageAlt: thumbnail?.alt || `Still from ${project?.title || "project"}`,
+    imageAlt: stegaClean(thumbnail?.alt || `Still from ${project?.title || "project"}`),
   };
 }
 
-export default function Home({cmsData}) {
+export default function Home({cmsData, draftMode, initial}) {
+  if (draftMode) {
+    return (
+      <SanityPreviewData initial={initial}>
+        {(previewData) => <PortfolioHome cmsData={previewData} />}
+      </SanityPreviewData>
+    );
+  }
+
+  return <PortfolioHome cmsData={cmsData} />;
+}
+
+function PortfolioHome({cmsData}) {
   const cmsSite = cmsData?.site || {};
   const site = {
     ...DEFAULT_SITE,
@@ -143,7 +164,7 @@ export default function Home({cmsData}) {
   return (
     <>
       <Head>
-        <title>{site.seoTitle}</title>
+        <title>{stegaClean(site.seoTitle)}</title>
         {site.portraitSrcSet && (
           <link
             rel="preload"
@@ -154,17 +175,17 @@ export default function Home({cmsData}) {
             fetchPriority="high"
           />
         )}
-        <meta name="description" content={site.seoDescription} />
+        <meta name="description" content={stegaClean(site.seoDescription)} />
         <meta name="theme-color" content="#080808" />
-        <meta property="og:title" content={site.seoTitle} />
-        <meta property="og:description" content={site.seoDescription} />
+        <meta property="og:title" content={stegaClean(site.seoTitle)} />
+        <meta property="og:description" content={stegaClean(site.seoDescription)} />
         <meta property="og:image" content={site.shareImageUrl} />
-        <meta property="og:image:alt" content={`${site.name} profile portrait`} />
+        <meta property="og:image:alt" content={`${stegaClean(site.name)} profile portrait`} />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
 
       <header className="site-header">
-        <a className="brand" href="#top" aria-label={`${site.name} home`}>DEV<span>.</span></a>
+        <a className="brand" href="#top" aria-label={`${stegaClean(site.name)} home`}>DEV<span>.</span></a>
         <nav aria-label="Primary navigation">
           <a href="#work">Work</a>
           <a href="#about">About</a>
@@ -195,7 +216,7 @@ export default function Home({cmsData}) {
                 height="1053"
                 fetchPriority="high"
                 decoding="async"
-                alt={cmsSite.portrait?.alt || site.name}
+                alt={stegaClean(cmsSite.portrait?.alt || site.name)}
               />
             </div>
             <div className="vertical-word" aria-hidden="true">DEV</div>
@@ -210,7 +231,7 @@ export default function Home({cmsData}) {
         </section>
 
         {featuredProject && <section className="featured" id="featured" aria-label="Featured film">
-          <button className="featured-image" onClick={() => setActiveProject(featuredProject)} aria-label={`Play ${featuredProject.title}`}>
+          <button className="featured-image" onClick={() => setActiveProject(featuredProject)} aria-label={`Play ${stegaClean(featuredProject.title)}`}>
             <img
               src={featuredProject.image}
               srcSet={featuredProject.imageSrcSet || undefined}
@@ -226,7 +247,7 @@ export default function Home({cmsData}) {
           <div className="featured-copy">
             <p>Featured film</p>
             <h2><LineBreaks text={featuredProject.displayTitle || featuredProject.title} /></h2>
-            <div className="featured-meta"><span>{featuredProject.category}</span><span>{featuredProject.duration}</span>{featuredProject.year && <span>{featuredProject.year}</span>}</div>
+            <div className="featured-meta"><span>{featuredProject.categoryLabel || featuredProject.category}</span><span>{featuredProject.duration}</span>{featuredProject.year && <span>{featuredProject.year}</span>}</div>
             {featuredProject.summary && <p className="featured-description">{featuredProject.summary}</p>}
             <button className="watch-button" onClick={() => setActiveProject(featuredProject)}>Watch film <ArrowIcon /></button>
           </div>
@@ -247,7 +268,7 @@ export default function Home({cmsData}) {
           <div className="project-grid">
             {visibleProjects.map((project) => (
               <article className="project-card" key={project._id || project.id}>
-                <button className="project-image" onClick={() => setActiveProject(project)} aria-label={`Play ${project.title}`}>
+                <button className="project-image" onClick={() => setActiveProject(project)} aria-label={`Play ${stegaClean(project.title)}`}>
                   <img
                     src={project.image}
                     srcSet={project.imageSrcSet || undefined}
@@ -261,7 +282,7 @@ export default function Home({cmsData}) {
                   <span className="project-play"><PlayIcon /></span>
                 </button>
                 <div className="project-info">
-                  <div><p>{project.category}</p><h3>{project.title}</h3></div>
+                  <div><p>{project.categoryLabel || project.category}</p><h3>{project.title}</h3></div>
                   <span>{project.duration}</span>
                 </div>
               </article>
@@ -295,22 +316,22 @@ export default function Home({cmsData}) {
           <Link href="/start-a-project">{site.contactCtaLabel} <ArrowIcon /></Link>
           <div className="contact-footer">
             <span>{site.name} · {site.role}</span>
-            <span className="contact-socials">{site.socialLinks.map((link) => <a key={link._key || link.url} href={link.url} target="_blank" rel="noreferrer">{link.label}</a>)}</span>
+            <span className="contact-socials">{site.socialLinks.map((link) => <a key={link._key || stegaClean(link.url)} href={stegaClean(link.url)} target="_blank" rel="noreferrer">{link.label}</a>)}</span>
             <span>© {new Date().getFullYear()}</span>
           </div>
         </section>
       </main>
 
       {activeProject && (
-        <div className="video-modal" role="dialog" aria-modal="true" aria-label={activeProject.title}>
+        <div className="video-modal" role="dialog" aria-modal="true" aria-label={stegaClean(activeProject.title)}>
           <button className="modal-backdrop" onClick={() => setActiveProject(null)} aria-label="Close video" />
           <div className="modal-content">
             <div className="modal-topbar">
-              <div><span>{[activeProject.category, activeProject.provider].filter(Boolean).join(" · ")}</span><strong>{activeProject.title}</strong></div>
+              <div><span>{[activeProject.categoryLabel || activeProject.category, activeProject.provider].filter(Boolean).join(" · ")}</span><strong>{activeProject.title}</strong></div>
               <button onClick={() => setActiveProject(null)} aria-label="Close video">Close</button>
             </div>
             <div className="video-frame">
-              <iframe src={activeProject.embedUrl} title={activeProject.title} allow="autoplay; fullscreen; picture-in-picture; encrypted-media" allowFullScreen />
+              <iframe src={activeProject.embedUrl} title={stegaClean(activeProject.title)} allow="autoplay; fullscreen; picture-in-picture; encrypted-media" allowFullScreen />
             </div>
           </div>
         </div>
@@ -319,12 +340,25 @@ export default function Home({cmsData}) {
   );
 }
 
-export async function getStaticProps() {
+export async function getStaticProps({draftMode = false}) {
   try {
+    if (draftMode) {
+      const {getLoadQueryOptions, loadQuery} = await import("../src/sanity/loader");
+      const initial = await loadQuery(HOME_QUERY, {}, getLoadQueryOptions(true));
+      return {props: {cmsData: null, draftMode: true, initial}};
+    }
+
     const cmsData = await sanityClient.fetch(HOME_QUERY);
-    return {props: {cmsData}, revalidate: 60};
+    return {props: {cmsData, draftMode: false, initial: null}, revalidate: 60};
   } catch (error) {
     console.error("Sanity content fetch failed; using local portfolio fallback.", error);
-    return {props: {cmsData: null}, revalidate: 30};
+    return {
+      props: {
+        cmsData: null,
+        draftMode,
+        initial: draftMode ? {data: null, sourceMap: null, perspective: "drafts"} : null,
+      },
+      ...(draftMode ? {} : {revalidate: 30}),
+    };
   }
 }
