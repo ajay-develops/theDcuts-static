@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import {useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import {DEV_EMAIL, gmailComposeUrl} from '../src/contact'
 
 const formId = process.env.NEXT_PUBLIC_FORMSPREE_FORM_ID
@@ -17,6 +17,11 @@ function ArrowIcon() {
 export default function StartAProject() {
   const [status, setStatus] = useState('idle')
   const [message, setMessage] = useState('')
+  const successPanelRef = useRef(null)
+
+  useEffect(() => {
+    if (status === 'success') successPanelRef.current?.focus()
+  }, [status])
 
   async function handleSubmit(event) {
     event.preventDefault()
@@ -94,6 +99,14 @@ export default function StartAProject() {
             </div>
           </aside>
 
+          {status === 'success' ? (
+            <section className="project-success" ref={successPanelRef} tabIndex="-1" role="status" aria-labelledby="project-success-title">
+              <p>Enquiry sent</p>
+              <h2 id="project-success-title">Brief<br />received.</h2>
+              <p>Thanks for sharing your project with Devender. Your details are safely in his inbox, and he’ll reply by email with the next steps.</p>
+              <Link className="gmail-button" href="/#work">View selected work <ArrowIcon /></Link>
+            </section>
+          ) : (
           <form className="project-form" action={formEndpoint || undefined} method="POST" onSubmit={handleSubmit}>
             <div className="form-row">
               <label>
@@ -165,6 +178,7 @@ export default function StartAProject() {
             {!formEndpoint && <p className="form-setup-note">Formspree connection pending. Gmail is available now.</p>}
             {message && <p className={`form-status ${status}`} role="status">{message}</p>}
           </form>
+          )}
         </section>
       </main>
     </>

@@ -169,6 +169,11 @@ svg { width: 1.2em; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-
 .form-status, .form-setup-note { margin: -10px 0 0; font-size: 12px; }
 .form-status.success { color: #28633a; }
 .form-status.error, .form-setup-note { color: #9b332c; }
+.project-success { min-height: 620px; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: clamp(36px, 5vw, 72px); background: var(--paper); color: var(--ink); outline: none; animation: hero-rise 520ms cubic-bezier(.2,.75,.25,1) both; }
+.project-success > p:first-child { margin: 0 0 25px; color: var(--red-on-light); font-size: 12px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+.project-success h2 { margin: 0; font-family: var(--font-league-gothic), "Arial Narrow", sans-serif; font-size: clamp(86px, 10vw, 150px); font-weight: 400; letter-spacing: -.02em; line-height: .82; text-transform: uppercase; }
+.project-success h2 + p { max-width: 560px; margin: 36px 0 0; color: #5a5955; font-size: clamp(16px, 1.2vw, 19px); line-height: 1.65; }
+.project-success .gmail-button { width: max-content; margin-top: 38px; }
 
 @keyframes hero-rise {
   from { transform: translateY(24px); }
