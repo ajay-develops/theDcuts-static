@@ -20,6 +20,7 @@ export default function StartAProject() {
 
   async function handleSubmit(event) {
     event.preventDefault()
+    const form = event.currentTarget
 
     if (!formEndpoint) {
       setStatus('error')
@@ -33,13 +34,13 @@ export default function StartAProject() {
     try {
       const response = await fetch(formEndpoint, {
         method: 'POST',
-        body: new FormData(event.currentTarget),
+        body: new FormData(form),
         headers: {Accept: 'application/json'},
       })
 
       if (!response.ok) throw new Error('Submission failed')
 
-      event.currentTarget.reset()
+      form.reset()
       setStatus('success')
       setMessage('Thanks. Your project brief has been sent to Devender.')
     } catch {
@@ -94,8 +95,6 @@ export default function StartAProject() {
           </aside>
 
           <form className="project-form" action={formEndpoint || undefined} method="POST" onSubmit={handleSubmit}>
-            <input className="form-honeypot" type="text" name="_gotcha" tabIndex="-1" autoComplete="off" aria-hidden="true" />
-
             <div className="form-row">
               <label>
                 <span>Your name</span>
