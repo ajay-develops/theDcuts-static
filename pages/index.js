@@ -305,7 +305,7 @@ function PortfolioHome({cmsData, fallbackProjects, fallbackFeatured}) {
           <div className="contact-footer">
             <span>{site.name} · {site.role}</span>
             <span className="contact-socials">{site.socialLinks.map((link) => <a key={link._key || stegaClean(link.url)} href={stegaClean(link.url)} target="_blank" rel="noreferrer">{link.label}</a>)}</span>
-            <span>© {new Date().getFullYear()}</span>
+            <span className="contact-credit">© {new Date().getFullYear()} · Developed by <a href="https://ajaydevelops.in" target="_blank" rel="noopener">Ajay Develops</a></span>
           </div>
         </section>
       </main>
