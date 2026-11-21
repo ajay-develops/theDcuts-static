@@ -20,6 +20,7 @@ export function getVideoEmbed(videoUrl, fallbackVimeoId) {
             id,
             provider: 'YouTube',
             embedUrl: `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?autoplay=1&rel=0`,
+            warmEmbedUrl: `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?enablejsapi=1&playsinline=1&rel=0`,
           }
         }
       }
@@ -31,6 +32,7 @@ export function getVideoEmbed(videoUrl, fallbackVimeoId) {
             id,
             provider: 'Vimeo',
             embedUrl: `https://player.vimeo.com/video/${id}?autoplay=1&title=0&byline=0&portrait=0`,
+            warmEmbedUrl: `https://player.vimeo.com/video/${id}?api=1&player_id=warm&playsinline=1&title=0&byline=0&portrait=0`,
           }
         }
       }
@@ -44,8 +46,9 @@ export function getVideoEmbed(videoUrl, fallbackVimeoId) {
       id: fallbackVimeoId,
       provider: 'Vimeo',
       embedUrl: `https://player.vimeo.com/video/${fallbackVimeoId}?autoplay=1&title=0&byline=0&portrait=0`,
+      warmEmbedUrl: `https://player.vimeo.com/video/${fallbackVimeoId}?api=1&player_id=warm&playsinline=1&title=0&byline=0&portrait=0`,
     }
   }
 
-  return {id: null, provider: null, embedUrl: null}
+  return {id: null, provider: null, embedUrl: null, warmEmbedUrl: null}
 }

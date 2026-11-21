@@ -264,3 +264,6 @@ svg { width: 1.2em; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }
+
+/* Pre-warmed player: laid out at full size so the iframe really loads, but invisible and inert until its card is clicked. */
+.video-modal.is-warm-only { visibility: hidden; pointer-events: none; }

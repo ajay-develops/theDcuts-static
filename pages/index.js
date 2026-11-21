@@ -2,10 +2,12 @@ import Head from "next/head";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import {stegaClean} from "next-sanity";
-import {useEffect, useMemo, useState} from "react";
+import {useEffect, useMemo, useRef, useState} from "react";
 import {gmailComposeUrl} from "../src/contact";
 import {sanityClient} from "../src/sanity/client";
 import {mapHomeData, mapProject} from "../src/portfolio/mapProject";
+import {useVideoWarmup} from "../src/portfolio/useVideoWarmup";
+import VideoModal from "../src/components/VideoModal";
 import {HOME_QUERY} from "../src/sanity/queries";
 
 const SanityPreviewData = dynamic(() => import("../src/components/SanityPreviewData"));
@@ -115,6 +117,18 @@ function PortfolioHome({cmsData, fallbackProjects, fallbackFeatured}) {
     [filter, projects]
   );
 
+  const modalRef = useRef(null);
+  const warmCandidates = useMemo(() => (featuredProject ? [featuredProject, ...visibleProjects] : visibleProjects), [featuredProject, visibleProjects]);
+  const {warmProject, clearWarm, cardProps} = useVideoWarmup(warmCandidates, Boolean(activeProject));
+  const openProject = (project) => {
+    modalRef.current?.playWarm(project);
+    setActiveProject(project);
+  };
+  const closeProject = () => {
+    setActiveProject(null);
+    clearWarm();
+  };
+
   useEffect(() => {
     if (!filters.includes(filter)) setFilter("All");
   }, [filter, filters]);
@@ -122,7 +136,7 @@ function PortfolioHome({cmsData, fallbackProjects, fallbackFeatured}) {
   useEffect(() => {
     if (!activeProject) return undefined;
     const closeOnEscape = (event) => {
-      if (event.key === "Escape") setActiveProject(null);
+      if (event.key === "Escape") closeProject();
     };
     document.body.classList.add("modal-open");
     window.addEventListener("keydown", closeOnEscape);
@@ -130,12 +144,15 @@ function PortfolioHome({cmsData, fallbackProjects, fallbackFeatured}) {
       document.body.classList.remove("modal-open");
       window.removeEventListener("keydown", closeOnEscape);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeProject]);
 
   return (
     <>
       <Head>
         <title>{stegaClean(site.seoTitle)}</title>
+        <link rel="preconnect" href="https://www.youtube-nocookie.com" />
+        <link rel="preconnect" href="https://player.vimeo.com" />
         {site.portraitSrcSet && (
           <link
             rel="preload"
@@ -202,7 +219,7 @@ function PortfolioHome({cmsData, fallbackProjects, fallbackFeatured}) {
         </section>
 
         {featuredProject && <section className="featured" id="featured" aria-label="Featured film">
-          <button className="featured-image" onClick={() => setActiveProject(featuredProject)} aria-label={`Play ${stegaClean(featuredProject.title)}`}>
+          <button className="featured-image" {...cardProps(featuredProject)} onClick={() => openProject(featuredProject)} aria-label={`Play ${stegaClean(featuredProject.title)}`}>
             <img
               src={featuredProject.image}
               srcSet={featuredProject.imageSrcSet || undefined}
@@ -220,7 +237,7 @@ function PortfolioHome({cmsData, fallbackProjects, fallbackFeatured}) {
             <h2><LineBreaks text={featuredProject.displayTitle || featuredProject.title} /></h2>
             <div className="featured-meta"><span>{featuredProject.categoryLabel || featuredProject.category}</span><span>{featuredProject.duration}</span>{featuredProject.year && <span>{featuredProject.year}</span>}</div>
             {featuredProject.summary && <p className="featured-description">{featuredProject.summary}</p>}
-            <button className="watch-button" onClick={() => setActiveProject(featuredProject)}>Watch film <ArrowIcon /></button>
+            <button className="watch-button" {...cardProps(featuredProject)} onClick={() => openProject(featuredProject)}>Watch film <ArrowIcon /></button>
           </div>
         </section>}
 
@@ -239,7 +256,7 @@ function PortfolioHome({cmsData, fallbackProjects, fallbackFeatured}) {
           <div className="project-grid">
             {visibleProjects.map((project) => (
               <article className="project-card" key={project._id || project.id} data-orientation={project.orientation} style={{"--ratio": project.ratio}}>
-                <button className="project-image" onClick={() => setActiveProject(project)} aria-label={`Play ${stegaClean(project.title)}`}>
+                <button className="project-image" {...cardProps(project)} onClick={() => openProject(project)} aria-label={`Play ${stegaClean(project.title)}`}>
                   <img
                     src={project.image}
                     srcSet={project.imageSrcSet || undefined}
@@ -293,20 +310,7 @@ function PortfolioHome({cmsData, fallbackProjects, fallbackFeatured}) {
         </section>
       </main>
 
-      {activeProject && (
-        <div className="video-modal" role="dialog" aria-modal="true" aria-label={stegaClean(activeProject.title)}>
-          <button className="modal-backdrop" onClick={() => setActiveProject(null)} aria-label="Close video" />
-          <div className="modal-content" data-orientation={activeProject.orientation}>
-            <div className="modal-topbar">
-              <div><span>{[activeProject.categoryLabel || activeProject.category, activeProject.provider].filter(Boolean).join(" · ")}</span><strong>{activeProject.title}</strong></div>
-              <button onClick={() => setActiveProject(null)} aria-label="Close video">Close</button>
-            </div>
-            <div className="video-frame">
-              <iframe src={activeProject.embedUrl} title={stegaClean(activeProject.title)} allow="autoplay; fullscreen; picture-in-picture; encrypted-media" allowFullScreen />
-            </div>
-          </div>
-        </div>
-      )}
+      <VideoModal ref={modalRef} activeProject={activeProject} warmProject={warmProject} onClose={closeProject} />
     </>
   );
 }
