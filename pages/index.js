@@ -4,9 +4,8 @@ import dynamic from "next/dynamic";
 import {stegaClean} from "next-sanity";
 import {useEffect, useMemo, useState} from "react";
 import {gmailComposeUrl} from "../src/contact";
-import {getVideoEmbed} from "../src/video";
 import {sanityClient} from "../src/sanity/client";
-import {urlFor} from "../src/sanity/image";
+import {mapHomeData, mapProject} from "../src/portfolio/mapProject";
 import {HOME_QUERY} from "../src/sanity/queries";
 
 const SanityPreviewData = dynamic(() => import("../src/components/SanityPreviewData"));
@@ -80,48 +79,20 @@ function LineBreaks({text}) {
   ));
 }
 
-function sanityImage(source, width, height) {
-  if (!source?.asset) return null;
-  return urlFor(source).width(width).height(height).fit("crop").auto("format").url();
-}
-
-function sanityImageSrcSet(source, widths, aspectRatio) {
-  if (!source?.asset) return null;
-  return widths
-    .map((width) => `${sanityImage(source, width, Math.round(width / aspectRatio))} ${width}w`)
-    .join(", ");
-}
-
-function mapProject(project) {
-  const video = getVideoEmbed(
-    stegaClean(project?.videoUrl),
-    stegaClean(project?.id),
-  );
-  const thumbnail = project?.thumbnail;
-  return {
-    ...project,
-    ...video,
-    categoryLabel: project?.category,
-    category: stegaClean(project?.category),
-    image: sanityImage(thumbnail, 1000, 625) || project?.image || `/img/dev/${video.id}.webp`,
-    imageSrcSet: sanityImageSrcSet(thumbnail, [320, 480, 640, 1000, 1400], 1.6),
-    imageAlt: stegaClean(thumbnail?.alt || `Still from ${project?.title || "project"}`),
-  };
-}
-
-export default function Home({cmsData, draftMode, initial}) {
+export default function Home({cmsData, draftMode, initial, fallbackProjects, fallbackFeatured}) {
   if (draftMode) {
     return (
       <SanityPreviewData initial={initial}>
-        {(previewData) => <PortfolioHome cmsData={previewData} />}
+        {(previewData) => <PortfolioHome cmsData={previewData} fallbackProjects={fallbackProjects} fallbackFeatured={fallbackFeatured} />}
       </SanityPreviewData>
     );
   }
 
-  return <PortfolioHome cmsData={cmsData} />;
+  return <PortfolioHome cmsData={cmsData} fallbackProjects={fallbackProjects} fallbackFeatured={fallbackFeatured} />;
 }
 
-function PortfolioHome({cmsData}) {
+// cmsData and fallbackProjects arrive already mapped (orientation, ratio, image URLs, embed data).
+function PortfolioHome({cmsData, fallbackProjects, fallbackFeatured}) {
   const cmsSite = cmsData?.site || {};
   const site = {
     ...DEFAULT_SITE,
@@ -129,13 +100,13 @@ function PortfolioHome({cmsData}) {
     aboutParagraphs: cmsSite.aboutParagraphs?.length ? cmsSite.aboutParagraphs : DEFAULT_SITE.aboutParagraphs,
     facts: cmsSite.facts?.length ? cmsSite.facts : DEFAULT_SITE.facts,
     socialLinks: cmsSite.socialLinks?.length ? cmsSite.socialLinks : DEFAULT_SITE.socialLinks,
-    portraitUrl: sanityImage(cmsSite.portrait, 800, 1053) || DEFAULT_SITE.portraitUrl,
-    portraitSrcSet: sanityImageSrcSet(cmsSite.portrait, [360, 560, 800, 1100], 0.76),
-    shareImageUrl: sanityImage(cmsSite.shareImage, 1200, 630) || "https://the-dcuts-static.vercel.app/img/dev/portrait-hd.webp",
+    portraitUrl: cmsSite.portraitUrl || DEFAULT_SITE.portraitUrl,
+    portraitSrcSet: cmsSite.portraitSrcSet || null,
+    shareImageUrl: cmsSite.shareImageUrl || "https://the-dcuts-static.vercel.app/img/dev/portrait-hd.webp",
   };
-  const projects = cmsData?.projects?.length ? cmsData.projects.map(mapProject) : DEFAULT_PROJECTS;
+  const projects = cmsData?.projects?.length ? cmsData.projects : fallbackProjects || [];
   const services = cmsData?.services?.length ? cmsData.services : DEFAULT_SERVICES;
-  const featuredProject = cmsSite.featuredProject ? mapProject(cmsSite.featuredProject) : projects.find((project) => project.id === "931046018") || projects[0];
+  const featuredProject = cmsSite.featuredProject || fallbackFeatured || null;
   const filters = useMemo(() => ["All", ...new Set(projects.map((project) => project.category).filter(Boolean))], [projects]);
   const [filter, setFilter] = useState("All");
   const [activeProject, setActiveProject] = useState(null);
@@ -267,14 +238,14 @@ function PortfolioHome({cmsData}) {
 
           <div className="project-grid">
             {visibleProjects.map((project) => (
-              <article className="project-card" key={project._id || project.id}>
+              <article className="project-card" key={project._id || project.id} data-orientation={project.orientation} style={{"--ratio": project.ratio}}>
                 <button className="project-image" onClick={() => setActiveProject(project)} aria-label={`Play ${stegaClean(project.title)}`}>
                   <img
                     src={project.image}
                     srcSet={project.imageSrcSet || undefined}
-                    sizes="(max-width: 760px) calc(100vw - 40px), 46vw"
-                    width="1000"
-                    height="625"
+                    sizes={project.orientation === "portrait" ? "(max-width: 760px) 46vw, 22vw" : "(max-width: 760px) calc(100vw - 40px), 46vw"}
+                    width={project.imageWidth}
+                    height={project.imageHeight}
                     loading="lazy"
                     decoding="async"
                     alt={project.imageAlt || `Still from ${project.title}`}
@@ -325,7 +296,7 @@ function PortfolioHome({cmsData}) {
       {activeProject && (
         <div className="video-modal" role="dialog" aria-modal="true" aria-label={stegaClean(activeProject.title)}>
           <button className="modal-backdrop" onClick={() => setActiveProject(null)} aria-label="Close video" />
-          <div className="modal-content">
+          <div className="modal-content" data-orientation={activeProject.orientation}>
             <div className="modal-topbar">
               <div><span>{[activeProject.categoryLabel || activeProject.category, activeProject.provider].filter(Boolean).join(" · ")}</span><strong>{activeProject.title}</strong></div>
               <button onClick={() => setActiveProject(null)} aria-label="Close video">Close</button>
@@ -340,16 +311,26 @@ function PortfolioHome({cmsData}) {
   );
 }
 
+function fallbackFor(cmsData, draftMode) {
+  // Local fallback content is only shipped when the CMS can't supply projects.
+  if (!draftMode && cmsData?.projects?.length) return {fallbackProjects: null, fallbackFeatured: null};
+  const featured = DEFAULT_PROJECTS.find((project) => project.id === "931046018") || DEFAULT_PROJECTS[0];
+  return {
+    fallbackProjects: DEFAULT_PROJECTS.map((project) => mapProject(project)),
+    fallbackFeatured: mapProject(featured, {landscapeImage: true}),
+  };
+}
+
 export async function getStaticProps({draftMode = false}) {
   try {
     if (draftMode) {
       const {getLoadQueryOptions, loadQuery} = await import("../src/sanity/loader");
       const initial = await loadQuery(HOME_QUERY, {}, getLoadQueryOptions(true));
-      return {props: {cmsData: null, draftMode: true, initial}};
+      return {props: {cmsData: null, draftMode: true, initial, ...fallbackFor(null, true)}};
     }
 
-    const cmsData = await sanityClient.fetch(HOME_QUERY);
-    return {props: {cmsData, draftMode: false, initial: null}, revalidate: 60};
+    const cmsData = mapHomeData(await sanityClient.fetch(HOME_QUERY));
+    return {props: {cmsData, draftMode: false, initial: null, ...fallbackFor(cmsData, false)}, revalidate: 60};
   } catch (error) {
     console.error("Sanity content fetch failed; using local portfolio fallback.", error);
     return {
@@ -357,6 +338,7 @@ export async function getStaticProps({draftMode = false}) {
         cmsData: null,
         draftMode,
         initial: draftMode ? {data: null, sourceMap: null, perspective: "drafts"} : null,
+        ...fallbackFor(null, draftMode),
       },
       ...(draftMode ? {} : {revalidate: 30}),
     };
