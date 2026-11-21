@@ -267,3 +267,7 @@ svg { width: 1.2em; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-
 
 /* Pre-warmed player: laid out at full size so the iframe really loads, but invisible and inert until its card is clicked. */
 .video-modal.is-warm-only { visibility: hidden; pointer-events: none; }
+
+/* Hover preview: the pre-warmed player is laid over its card (position and clip are set from JS), then snaps back into the modal on click. */
+.video-modal.is-warm-only .video-frame iframe.is-previewing { visibility: visible; position: fixed; inset: auto; max-width: none; z-index: 101; pointer-events: none; opacity: 0; transition: opacity 350ms ease; }
+.video-modal.is-warm-only .video-frame iframe.is-previewing.is-shown { opacity: 1; }
