@@ -6,7 +6,7 @@ import {useEffect, useMemo, useRef, useState} from "react";
 import {gmailComposeUrl} from "../src/contact";
 import {sanityClient} from "../src/sanity/client";
 import {mapHomeData, mapProject} from "../src/portfolio/mapProject";
-import {useVideoWarmup} from "../src/portfolio/useVideoWarmup";
+import {useVideoWarmup, projectId} from "../src/portfolio/useVideoWarmup";
 import VideoModal from "../src/components/VideoModal";
 import {HOME_QUERY} from "../src/sanity/queries";
 
@@ -119,7 +119,7 @@ function PortfolioHome({cmsData, fallbackProjects, fallbackFeatured}) {
 
   const modalRef = useRef(null);
   const warmCandidates = useMemo(() => (featuredProject ? [featuredProject, ...visibleProjects] : visibleProjects), [featuredProject, visibleProjects]);
-  const {warmProject, clearWarm, cardProps} = useVideoWarmup(warmCandidates, Boolean(activeProject));
+  const {warmProject, clearWarm, cardProps, previewTarget} = useVideoWarmup(warmCandidates, Boolean(activeProject));
   const openProject = (project) => {
     modalRef.current?.playWarm(project);
     setActiveProject(project);
@@ -237,7 +237,7 @@ function PortfolioHome({cmsData, fallbackProjects, fallbackFeatured}) {
             <h2><LineBreaks text={featuredProject.displayTitle || featuredProject.title} /></h2>
             <div className="featured-meta"><span>{featuredProject.categoryLabel || featuredProject.category}</span><span>{featuredProject.duration}</span>{featuredProject.year && <span>{featuredProject.year}</span>}</div>
             {featuredProject.summary && <p className="featured-description">{featuredProject.summary}</p>}
-            <button className="watch-button" {...cardProps(featuredProject)} onClick={() => openProject(featuredProject)}>Watch film <ArrowIcon /></button>
+            <button className="watch-button" {...cardProps(featuredProject, {preview: false})} onClick={() => openProject(featuredProject)}>Watch film <ArrowIcon /></button>
           </div>
         </section>}
 
@@ -305,12 +305,12 @@ function PortfolioHome({cmsData, fallbackProjects, fallbackFeatured}) {
           <div className="contact-footer">
             <span>{site.name} · {site.role}</span>
             <span className="contact-socials">{site.socialLinks.map((link) => <a key={link._key || stegaClean(link.url)} href={stegaClean(link.url)} target="_blank" rel="noreferrer">{link.label}</a>)}</span>
-            <span>© {new Date().getFullYear()}</span>
+            <span className="contact-credit">© {new Date().getFullYear()} · Developed by <a href="https://ajaydevelops.in" target="_blank" rel="noopener">Ajay Develops</a></span>
           </div>
         </section>
       </main>
 
-      <VideoModal ref={modalRef} activeProject={activeProject} warmProject={warmProject} onClose={closeProject} />
+      <VideoModal ref={modalRef} activeProject={activeProject} warmProject={warmProject} previewTarget={previewTarget} onClose={closeProject} />
     </>
   );
 }

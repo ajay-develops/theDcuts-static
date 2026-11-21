@@ -21,7 +21,7 @@ const vimeo = (method, value) => JSON.stringify(value === undefined ? {method} :
 // Sent after the iframe loads so the player starts posting events to us.
 export function listenCommands(provider) {
   return provider === "Vimeo"
-    ? [vimeo("addEventListener", "ready"), vimeo("addEventListener", "play")]
+    ? [vimeo("addEventListener", "ready"), vimeo("addEventListener", "play"), vimeo("addEventListener", "ended")]
     : [JSON.stringify({event: "listening", id: "warm"})];
 }
 
@@ -33,6 +33,11 @@ export function prebufferCommands(provider) {
 // Sent once the muted prebuffer playback has started: stop and rewind to the beginning.
 export function settleCommands(provider) {
   return provider === "Vimeo" ? [vimeo("pause"), vimeo("setCurrentTime", 0)] : [yt("pauseVideo"), yt("seekTo", [0, true])];
+}
+
+// Sent to loop the in-card preview (and before the click reveal, so the modal always starts from the beginning).
+export function restartCommands(provider) {
+  return provider === "Vimeo" ? [vimeo("setCurrentTime", 0), vimeo("play")] : [yt("seekTo", [0, true]), yt("playVideo")];
 }
 
 // Sent synchronously in the click handler.
@@ -62,4 +67,10 @@ export function isPlayingMessage(provider, origin, data) {
 export function isReadyMessage(provider, origin, data) {
   const payload = parsePayload(provider, origin, data);
   return Boolean(payload && READY_EVENTS[provider].includes(payload.event));
+}
+
+export function isEndedMessage(provider, origin, data) {
+  const payload = parsePayload(provider, origin, data);
+  if (!payload) return false;
+  return provider === "Vimeo" ? payload.event === "ended" : payload.event === "infoDelivery" && payload.info?.playerState === 0;
 }

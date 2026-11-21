@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {canWarm, listenCommands, prebufferCommands, settleCommands, revealCommands, isReadyMessage, isPlayingMessage, PLAYER_HOSTS} from "./warmup.mjs";
+import {canWarm, listenCommands, prebufferCommands, settleCommands, revealCommands, isReadyMessage, isPlayingMessage, isEndedMessage, restartCommands, PLAYER_HOSTS} from "./warmup.mjs";
 
 test("canWarm blocks saveData", () => {
   assert.equal(canWarm({saveData: true, effectiveType: "4g"}), false);
@@ -35,6 +35,7 @@ test("vimeo commands are valid JSON with the player API's fields", () => {
   assert.deepEqual(parse(listenCommands("Vimeo")), [
     {method: "addEventListener", value: "ready"},
     {method: "addEventListener", value: "play"},
+    {method: "addEventListener", value: "ended"},
   ]);
   assert.deepEqual(parse(prebufferCommands("Vimeo")), [{method: "setMuted", value: true}, {method: "play"}]);
   assert.deepEqual(parse(settleCommands("Vimeo")), [{method: "pause"}, {method: "setCurrentTime", value: 0}]);
@@ -67,4 +68,21 @@ test("isReadyMessage rejects malformed or non-ready data", () => {
     assert.equal(isReadyMessage("YouTube", PLAYER_HOSTS.YouTube, data), false);
     assert.equal(isReadyMessage("Vimeo", PLAYER_HOSTS.Vimeo, data), false);
   }
+});
+
+test("restartCommands seek to the start and play", () => {
+  assert.deepEqual(parse(restartCommands("YouTube")), [
+    {event: "command", func: "seekTo", args: [0, true]},
+    {event: "command", func: "playVideo", args: []},
+  ]);
+  assert.deepEqual(parse(restartCommands("Vimeo")), [{method: "setCurrentTime", value: 0}, {method: "play"}]);
+});
+
+test("isEndedMessage detects the end of playback from the provider's own origin only", () => {
+  const yt = JSON.stringify({event: "infoDelivery", info: {playerState: 0}});
+  assert.equal(isEndedMessage("YouTube", PLAYER_HOSTS.YouTube, yt), true);
+  assert.equal(isEndedMessage("YouTube", "https://evil.example", yt), false);
+  assert.equal(isEndedMessage("YouTube", PLAYER_HOSTS.YouTube, JSON.stringify({event: "infoDelivery", info: {playerState: 1}})), false);
+  assert.equal(isEndedMessage("Vimeo", PLAYER_HOSTS.Vimeo, JSON.stringify({event: "ended"})), true);
+  assert.equal(isEndedMessage("Vimeo", PLAYER_HOSTS.Vimeo, JSON.stringify({event: "play"})), false);
 });
