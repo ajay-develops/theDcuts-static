@@ -36,3 +36,20 @@ test("embedUrl is unchanged and keeps autoplay=1", () => {
   assert.equal(params(getVideoEmbed("https://youtu.be/abc123").embedUrl).get("autoplay"), "1");
   assert.equal(params(getVideoEmbed("https://vimeo.com/1").embedUrl).get("autoplay"), "1");
 });
+test("instagram reel and post urls embed, with no warm player", () => {
+  for (const url of [
+    "https://www.instagram.com/reel/C9abc_-12/",
+    "https://instagram.com/reels/C9abc_-12",
+    "https://www.instagram.com/p/C9abc_-12/?igsh=xyz",
+    "https://www.instagram.com/someuser/reel/C9abc_-12/",
+  ]) {
+    const v = getVideoEmbed(url);
+    assert.equal(v.provider, "Instagram", url);
+    assert.equal(v.id, "C9abc_-12", url);
+    assert.equal(v.embedUrl, "https://www.instagram.com/p/C9abc_-12/embed/", url);
+    assert.equal(v.warmEmbedUrl, null, url);
+  }
+});
+test("instagram profile url is not a video", () => {
+  assert.equal(getVideoEmbed("https://www.instagram.com/someuser/").provider, null);
+});

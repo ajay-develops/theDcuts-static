@@ -7,9 +7,15 @@ function validateVideoUrl(value?: string) {
     const hostname = new URL(value).hostname.toLowerCase().replace(/^www\./, '')
     const isYouTube = hostname === 'youtu.be' || hostname === 'youtube.com' || hostname.endsWith('.youtube.com') || hostname === 'youtube-nocookie.com' || hostname.endsWith('.youtube-nocookie.com')
     const isVimeo = hostname === 'vimeo.com' || hostname.endsWith('.vimeo.com')
-    return isYouTube || isVimeo || 'Use a YouTube or Vimeo video URL.'
+    const isInstagram = hostname === 'instagram.com' || hostname.endsWith('.instagram.com') || hostname === 'instagr.am'
+    if (isInstagram) {
+      const parts = new URL(value).pathname.split('/').filter(Boolean)
+      const index = parts.findIndex((part) => ['p', 'reel', 'reels', 'tv'].includes(part))
+      return (index >= 0 && Boolean(parts[index + 1])) || 'Use the link to an Instagram reel or post, not a profile.'
+    }
+    return isYouTube || isVimeo || 'Use a YouTube, Vimeo or Instagram video URL.'
   } catch {
-    return 'Enter a valid YouTube or Vimeo URL.'
+    return 'Enter a valid YouTube, Vimeo or Instagram URL.'
   }
 }
 
@@ -33,8 +39,8 @@ export const project = defineType({
     defineField({name: 'summary', title: 'Short description', type: 'text', rows: 4, group: 'content'}),
     defineField({
       name: 'videoUrl',
-      title: 'YouTube or Vimeo URL',
-      description: 'Paste the full public or unlisted video URL. Private videos cannot be played on the portfolio.',
+      title: 'YouTube, Vimeo or Instagram URL',
+      description: 'Paste the full public or unlisted video URL, or the link to a public Instagram reel. Private videos and private Instagram accounts cannot be played on the portfolio.',
       type: 'url',
       group: 'media',
       validation: (rule) => rule.required().uri({scheme: ['http', 'https']}).custom(validateVideoUrl),

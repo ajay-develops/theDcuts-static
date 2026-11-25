@@ -31,9 +31,15 @@ by Sanity's short-lived preview URL secrets and a server-only Viewer token.
 Deleting a referenced category or featured project may be blocked until its
 references are changed. This protects the live layout from broken records.
 
-Projects accept full YouTube and Vimeo URLs. Paste the video URL, upload a
-thumbnail still, add its alternative text, and publish. Public and unlisted
-videos can play in the portfolio; private videos cannot be embedded.
+Projects accept full YouTube, Vimeo and Instagram URLs. Paste the video URL,
+upload a thumbnail still, add its alternative text, and publish. Public and
+unlisted videos can play in the portfolio; private videos cannot be embedded.
+
+For Instagram, paste the link to the reel or post (Share → Copy link), from a
+public account. Instagram shows its own player with the account name and a
+"View on Instagram" footer, and the visitor presses play inside it. Instagram
+projects don't get the instant start or hover preview that YouTube and Vimeo
+projects have, because Instagram's player can't be controlled by the site.
 
 ## Future sections
 

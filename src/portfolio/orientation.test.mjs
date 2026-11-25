@@ -34,3 +34,7 @@ test("malformed url does not throw", () => {
 test("ratios", () => {
   assert.deepEqual(RATIOS, {landscape: 1.6, portrait: 0.5625});
 });
+test("instagram reel url without dimensions is portrait", () => {
+  assert.equal(getOrientation(undefined, "https://www.instagram.com/reel/C9abc/"), "portrait");
+  assert.equal(getOrientation(undefined, "https://www.instagram.com/p/C9abc/"), "landscape");
+});

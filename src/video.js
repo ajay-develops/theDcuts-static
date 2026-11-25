@@ -36,6 +36,22 @@ export function getVideoEmbed(videoUrl, fallbackVimeoId) {
           }
         }
       }
+      // Instagram posts and reels: /p/{code}, /reel/{code}, /reels/{code}, /tv/{code}, optionally after /{username}/.
+      // Instagram's embed has no player API, so there is no warm player or hover preview: the modal loads the
+      // embed on click and the visitor presses play inside it.
+      if (host === 'instagram.com' || host.endsWith('.instagram.com') || host === 'instagr.am') {
+        const parts = url.pathname.split('/').filter(Boolean)
+        const index = parts.findIndex((part) => ['p', 'reel', 'reels', 'tv'].includes(part))
+        const id = index >= 0 ? parts[index + 1] : null
+        if (id && /^[\w-]+$/.test(id)) {
+          return {
+            id,
+            provider: 'Instagram',
+            embedUrl: `https://www.instagram.com/p/${id}/embed/`,
+            warmEmbedUrl: null,
+          }
+        }
+      }
     } catch {
       // Sanity validates new URLs; this fallback keeps older records renderable.
     }
