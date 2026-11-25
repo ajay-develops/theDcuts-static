@@ -61,7 +61,7 @@ export default function StartAProject() {
         <meta name="description" content="Tell video editor Devender Saroha about your film, campaign, motion graphics, or visual-effects project." />
         <meta property="og:title" content="Start a project — Devender Saroha" />
         <meta property="og:description" content="Share your project brief with video editor Devender Saroha." />
-        <meta property="og:image" content="https://the-dcuts-static.vercel.app/img/dev/portrait-hd.webp" />
+        <meta property="og:image" content="https://the-dcuts-static.vercel.app/img/dev/og-share.jpg" />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
 
