@@ -16,6 +16,8 @@ const VideoModal = forwardRef(function VideoModal({activeProject, warmProject, p
   const stateRef = useRef({prebuffered: false, prebuffering: false, revealed: false});
   const [playedWarmId, setPlayedWarmId] = useState(null);
   const [previewShown, setPreviewShown] = useState(false);
+  const instagramFrameRef = useRef(null);
+  const [instagramHeight, setInstagramHeight] = useState(null);
 
   const warmId = projectId(warmProject);
   const activeId = projectId(activeProject);
@@ -107,6 +109,25 @@ const VideoModal = forwardRef(function VideoModal({activeProject, warmProject, p
     if (!activeId) setPlayedWarmId(null);
   }, [activeId]);
 
+  // Instagram's embed posts its content height; size the frame to it so there is no blank space or inner scrolling.
+  const isInstagram = activeProject?.provider === "Instagram";
+  useEffect(() => {
+    setInstagramHeight(null);
+    if (!isInstagram) return undefined;
+    const onMessage = (event) => {
+      if (event.origin !== "https://www.instagram.com" || event.source !== instagramFrameRef.current?.contentWindow) return;
+      try {
+        const payload = typeof event.data === "string" ? JSON.parse(event.data) : event.data;
+        const height = Number(payload?.details?.height);
+        if (payload?.type === "MEASURE" && height > 0) setInstagramHeight(height);
+      } catch {
+        // Not a message we understand.
+      }
+    };
+    window.addEventListener("message", onMessage);
+    return () => window.removeEventListener("message", onMessage);
+  }, [isInstagram, activeId]);
+
   // Called synchronously in the card's click handler so the user gesture still counts.
   const playWarm = useCallback(
     (project) => {
@@ -139,16 +160,16 @@ const VideoModal = forwardRef(function VideoModal({activeProject, warmProject, p
       inert={!isActive}
     >
       <button className="modal-backdrop" onClick={onClose} aria-label="Close video" tabIndex={isActive ? 0 : -1} />
-      <div className="modal-content" data-orientation={shown.orientation}>
+      <div className="modal-content" data-orientation={shown.orientation} data-provider={shown.provider}>
         <div className="modal-topbar">
           <div><span>{[shown.categoryLabel || shown.category, shown.provider].filter(Boolean).join(" · ")}</span><strong>{shown.title}</strong></div>
           <button onClick={onClose} aria-label="Close video">Close</button>
         </div>
-        <div className="video-frame">
+        <div className="video-frame" style={isInstagram && instagramHeight ? {height: `${instagramHeight}px`} : undefined}>
           {iframeProject && (
             <iframe
               key={`${useWarmIframe ? "warm" : "cold"}-${projectId(iframeProject)}`}
-              ref={useWarmIframe ? warmFrameRef : undefined}
+              ref={useWarmIframe ? warmFrameRef : isInstagram ? instagramFrameRef : undefined}
               className={useWarmIframe && previewing ? `is-previewing${previewShown ? " is-shown" : ""}` : undefined}
               src={useWarmIframe ? iframeProject.warmEmbedUrl : iframeProject.embedUrl}
               title={stegaClean(iframeProject.title)}
