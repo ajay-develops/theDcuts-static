@@ -104,7 +104,7 @@ function PortfolioHome({cmsData, fallbackProjects, fallbackFeatured}) {
     socialLinks: cmsSite.socialLinks?.length ? cmsSite.socialLinks : DEFAULT_SITE.socialLinks,
     portraitUrl: cmsSite.portraitUrl || DEFAULT_SITE.portraitUrl,
     portraitSrcSet: cmsSite.portraitSrcSet || null,
-    shareImageUrl: cmsSite.shareImageUrl || "https://the-dcuts-static.vercel.app/img/dev/portrait-hd.webp",
+    shareImageUrl: cmsSite.shareImageUrl || "https://the-dcuts-static.vercel.app/img/dev/og-share.jpg",
   };
   const projects = cmsData?.projects?.length ? cmsData.projects : fallbackProjects || [];
   const services = cmsData?.services?.length ? cmsData.services : DEFAULT_SERVICES;
@@ -168,6 +168,8 @@ function PortfolioHome({cmsData, fallbackProjects, fallbackFeatured}) {
         <meta property="og:title" content={stegaClean(site.seoTitle)} />
         <meta property="og:description" content={stegaClean(site.seoDescription)} />
         <meta property="og:image" content={site.shareImageUrl} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
         <meta property="og:image:alt" content={`${stegaClean(site.name)} profile portrait`} />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
